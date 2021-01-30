@@ -5,36 +5,43 @@ USE supply_chain_management_db;
 
 -- Customer Type
 CREATE TABLE customer_type (
-    type_id INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50)
+    type VARCHAR(50) PRIMARY KEY
+);
+
+-- User Type
+CREATE TABLE user_type(
+    type VARCHAR(50) PRIMARY KEY
+);
+
+-- Store
+CREATE TABLE store(
+    store_id INT AUTO_INCREMENT PRIMARY KEY,
+    store_name VARCHAR(50) NOT NULL,
+    destination VARCHAR(50) NOT NULL
+);
+
+-- User Data
+CREATE TABLE user_data(
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    UNIQUE email VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    birth_date DATE,
+    registered_date DATE NOT NULL,
+    user_type VARCHAR(50),
+    FOREIGN KEY (user_type)
+        REFERENCES user_type(type)
 );
 
 -- Customer Table
-CREATE TABLE customer
-(
-    customer_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    email VARCHAR(255) UNIQUE,
-    address VARCHAR(255),
-    birth_date DATE,
-    registered_date DATE,
-    type_id INT,
-    FOREIGN KEY (type_id)
-        REFERENCES customer_type(type_id)
+CREATE TABLE customer(
+    customer_id INT PRIMARY KEY,
+    type VARCHAR(50) NOT NU,
+    FOREIGN KEY (customer_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-);
-
--- Customer Contact No
-CREATE TABLE customer_contact_no (
-    customer_id INT, 
-    contact_no VARCHAR(15), 
-    FOREIGN KEY (customer_id)
-        REFERENCES customer(customer_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY (customer_id,contact_no)
 );
 
 -- Train Route
@@ -42,10 +49,14 @@ CREATE TABLE train_route(
     train_route_id INT AUTO_INCREMENT PRIMARY KEY,
     distance DECIMAL(5,2),
     average_time TIME,
-    destination VARCHAR(100)
+    store_id INT,
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 
--- Truck Route
+-- Truck route
 CREATE TABLE truck_route(
     truck_route_id INT AUTO_INCREMENT PRIMARY KEY,
     distance DECIMAL(5,2),
@@ -55,6 +66,7 @@ CREATE TABLE truck_route(
         REFERENCES train_route(train_route_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
+    
 );
 
 -- Order Table
@@ -74,6 +86,8 @@ CREATE TABLE order_table(
         ON UPDATE CASCADE
         ON DELETE CASCADE    
 );
+
+-- Kasun
 
 -- Payment Method Table
 CREATE TABLE payment_method(
@@ -170,16 +184,43 @@ CREATE TABLE train_time_table(
         ON DELETE CASCADE
 );
 
+-- thushan
+
+-- Staff
+CREATE TABLE staff(
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    salary DECIMAL(7,2),
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+-- Delivery Manager
+CREATE TABLE delivery_manager(
+    delivery_manager_id INT PRIMARY KEY,
+    FOREIGN KEY (delivery_manager_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
 -- Train schedule
 CREATE TABLE train_schedule(
     order_id INT PRIMARY KEY,
     train_time_table_id INT,
+    delivery_manager_id INT,
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (train_time_table_id)
         REFERENCES train_time_table(train_time_table_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (delivery_manager_id)
+        REFERENCES delivery_manager(delivery_manager_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -217,35 +258,13 @@ CREATE TABLE driver_assistant(
     total_work_hours DECIMAL(5,2)
 );
 
-
--- Driver Contact No
-CREATE TABLE driver_contact_no (
-    driver_id INT, 
-    contact_no VARCHAR(10), 
-    FOREIGN KEY (driver_id)
-        REFERENCES driver(driver_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY (driver_id,contact_no)
-);
-
--- Driver Assistant Contact No
-CREATE TABLE driver_assistant_contact_no (
-    driver_assistant_id INT, 
-    contact_no VARCHAR(10), 
-    FOREIGN KEY (driver_assistant_id)
-        REFERENCES driver_assistant(driver_assistant_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY(driver_assistant_id,contact_no)
-);
-
 -- Truck Schedule
 CREATE TABLE truck_schedule(
     truck_schedule_id INT PRIMARY KEY,
     truck_route_id INT,
     truck_id INT,
     date_time DATETIME,
+    store_manager_id INT,
     driver_id INT,
     driver_assistant_id INT,
     FOREIGN KEY (truck_route_id)
@@ -256,6 +275,10 @@ CREATE TABLE truck_schedule(
         REFERENCES truck(truck_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
+    FOREIGN KEY (store_manager_id)
+        REFERENCES store_manager(store_manager_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
     FOREIGN KEY (driver_id)
         REFERENCES driver(driver_id)
         ON UPDATE CASCADE
@@ -280,3 +303,95 @@ CREATE TABLE scheduled_order (
         ON DELETE CASCADE,
     PRIMARY KEY (order_id,truck_schedule_id)
 );
+
+-- Dushan
+
+-- User Account
+CREATE TABLE user_account(
+    user_id INT PRIMARY KEY,
+    username VARCHAR(50),
+    password VARCHAR(50),
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- User Contact Number
+CREATE TABLE user_contact_number(
+    user_id INT PRIMARY KEY,
+    contact_no VARCHAR(20)
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
+    PRIMARY KEY(user_id,contact_no)
+);
+
+-- Customer Type
+CREATE TABLE customer_type(
+    type_id INT PRIMARY KEY,
+    type VARCHAR(50)
+);
+
+-- Company Manaager 
+CREATE TABLE company_manager(
+    company_manager_id INT PRIMARY KEY,
+    FOREIGN KEY (company_manager_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- Store Manager
+CREATE TABLE store_manager(
+    store_manager_id INT PRIMARY KEY,
+    store_id INT,
+    FOREIGN KEY (store_manager_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE ,
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE 
+);
+
+-- Driver Assistant
+CREATE TABLE driver_assistant(
+    driver_assistant_id INT PRIMARY KEY,
+    store_id INT,
+    total_work_hours DECIMAL(5,2),
+    FOREIGN KEY (driver_assistant_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE ,
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE 
+);
+
+-- Driver
+CREATE TABLE driver(
+    driver_id INT PRIMARY KEY,
+    store_id INT,
+    total_work_hours DECIMAL(5,2),
+    FOREIGN KEY (driver_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE ,
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE 
+);
+
+-- Admin
+CREATE TABLE admin(
+    admin_id INT PRIMARY KEY,
+    FOREIGN KEY (admin_id)
+        REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE 
+);
+
+-- Dilshan
