@@ -309,8 +309,8 @@ CREATE TABLE scheduled_order (
 -- User Account
 CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
-    username VARCHAR(50),
-    password VARCHAR(50),
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
@@ -319,14 +319,14 @@ CREATE TABLE user_account(
 
 -- User Contact Number
 CREATE TABLE user_contact_number(
-    user_id INT PRIMARY KEY,
-    contact_no VARCHAR(20)
+    user_id INT,
+    contact_no VARCHAR(20) NOT NULL
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
     PRIMARY KEY(user_id,contact_no)
 );
 
--- Customer Type
+-- Customer Type SHOULD CHANGE
 CREATE TABLE customer_type(
     type_id INT PRIMARY KEY,
     type VARCHAR(50)
@@ -334,8 +334,9 @@ CREATE TABLE customer_type(
 
 -- Company Manaager 
 CREATE TABLE company_manager(
-    company_manager_id INT PRIMARY KEY,
-    FOREIGN KEY (company_manager_id)
+    company_manager_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT
+    FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -343,9 +344,10 @@ CREATE TABLE company_manager(
 
 -- Store Manager
 CREATE TABLE store_manager(
-    store_manager_id INT PRIMARY KEY,
+    store_manager_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
     store_id INT,
-    FOREIGN KEY (store_manager_id)
+    FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE ,
@@ -357,10 +359,11 @@ CREATE TABLE store_manager(
 
 -- Driver Assistant
 CREATE TABLE driver_assistant(
-    driver_assistant_id INT PRIMARY KEY,
+    driver_assistant_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
     store_id INT,
-    total_work_hours DECIMAL(5,2),
-    FOREIGN KEY (driver_assistant_id)
+    total_work_hours DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE ,
@@ -372,10 +375,11 @@ CREATE TABLE driver_assistant(
 
 -- Driver
 CREATE TABLE driver(
-    driver_id INT PRIMARY KEY,
+    driver_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
     store_id INT,
-    total_work_hours DECIMAL(5,2),
-    FOREIGN KEY (driver_id)
+    total_work_hours DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE ,
@@ -387,8 +391,9 @@ CREATE TABLE driver(
 
 -- Admin
 CREATE TABLE admin(
-    admin_id INT PRIMARY KEY,
-    FOREIGN KEY (admin_id)
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT
+    FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE 
