@@ -91,8 +91,7 @@ CREATE TABLE order_table(
 
 -- Payment Method Table
 CREATE TABLE payment_method(
-    payment_method_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50)
+    name VARCHAR(50) PRIMARY KEY
 );
 
 
@@ -100,7 +99,7 @@ CREATE TABLE payment_method(
 CREATE TABLE payment(
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
-    payment_method INT,
+    payment_method VARCHAR(50),
     amount DECIMAL(12,2),
     payment_date DATE,
     FOREIGN KEY (order_id) 
@@ -108,7 +107,7 @@ CREATE TABLE payment(
             ON UPDATE CASCADE
             ON DELETE CASCADE,
     FOREIGN KEY (payment_method) 
-        REFERENCES payment_method(payment_method_id)
+        REFERENCES payment_method(name)
         ON UPDATE CASCADE
         ON DELETE CASCADE   
 );
