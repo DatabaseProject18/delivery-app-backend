@@ -41,7 +41,7 @@ CREATE TABLE customer_contact_no (
 CREATE TABLE train_route(
     train_route_id INT AUTO_INCREMENT PRIMARY KEY,
     distance DECIMAL(5,2) NOT NULL,
-    average_time TIME NOT NULL,
+    average_time DECIMAL(3,2) NOT NULL,
     destination VARCHAR(100) NOT NULL
 );
 
@@ -49,7 +49,7 @@ CREATE TABLE train_route(
 CREATE TABLE truck_route(
     truck_route_id INT AUTO_INCREMENT PRIMARY KEY,
     distance DECIMAL(5,2) NOT NULL,
-    average_time TIME NOT NULL,
+    average_time DECIMAL(3,2) NOT NULL,
     train_route_id INT NOT NULL,
     FOREIGN KEY (train_route_id)
         REFERENCES train_route(train_route_id)
