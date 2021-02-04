@@ -290,6 +290,7 @@ CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
+    status BOOLEAN DEFAULT true,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
