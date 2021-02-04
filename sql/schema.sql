@@ -326,10 +326,9 @@ CREATE TABLE user_contact_number(
     PRIMARY KEY(user_id,contact_no)
 );
 
--- Customer Type SHOULD CHANGE
+-- Customer Type
 CREATE TABLE customer_type(
-    type_id INT PRIMARY KEY,
-    type VARCHAR(50)
+    type VARCHAR(50) PRIMARY KEY
 );
 
 -- Company Manaager 
