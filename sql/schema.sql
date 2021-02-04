@@ -6,20 +6,20 @@ USE supply_chain_management_db;
 -- Customer Type
 CREATE TABLE customer_type (
     type_id INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50)
+    type VARCHAR(50) NOT NULL
 );
 
 -- Customer Table
 CREATE TABLE customer
 (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    email VARCHAR(255) UNIQUE,
-    address VARCHAR(255),
-    birth_date DATE,
-    registered_date DATE,
-    type_id INT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL,
+    registered_date DATE NOT NULL,
+    type_id INT NOT NULL,
     FOREIGN KEY (type_id)
         REFERENCES customer_type(type_id)
         ON UPDATE CASCADE
@@ -28,8 +28,8 @@ CREATE TABLE customer
 
 -- Customer Contact No
 CREATE TABLE customer_contact_no (
-    customer_id INT, 
-    contact_no VARCHAR(15), 
+    customer_id INT NOT NULL, 
+    contact_no VARCHAR(15) NOT NULL, 
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -40,17 +40,17 @@ CREATE TABLE customer_contact_no (
 -- Train Route
 CREATE TABLE train_route(
     train_route_id INT AUTO_INCREMENT PRIMARY KEY,
-    distance DECIMAL(5,2),
-    average_time TIME,
-    destination VARCHAR(100)
+    distance DECIMAL(5,2) NOT NULL,
+    average_time TIME NOT NULL,
+    destination VARCHAR(100) NOT NULL
 );
 
 -- Truck Route
 CREATE TABLE truck_route(
     truck_route_id INT AUTO_INCREMENT PRIMARY KEY,
-    distance DECIMAL(5,2),
-    average_time TIME,
-    train_route_id INT,
+    distance DECIMAL(5,2) NOT NULL,
+    average_time TIME NOT NULL,
+    train_route_id INT NOT NULL,
     FOREIGN KEY (train_route_id)
         REFERENCES train_route(train_route_id)
         ON UPDATE CASCADE
@@ -60,11 +60,11 @@ CREATE TABLE truck_route(
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_date DATE,
-    delivery_date DATE,
-    customer_id INT,
-    route_id INT,
-    cost DECIMAL(12, 2), 
+    order_date DATE NOT NULL,
+    delivery_date DATE NOT NULL,
+    customer_id INT NOT NULL,
+    route_id INT NOT NULL,
+    cost DECIMAL(12, 2) NOT NULL, 
     FOREIGN KEY (customer_id) 
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -78,7 +78,7 @@ CREATE TABLE order_table(
 -- Payment Method Table
 CREATE TABLE payment_method(
     payment_method_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50)
+    name VARCHAR(50) NOT NULL
 );
 
 
