@@ -188,7 +188,7 @@ CREATE TABLE train_time_table(
 -- Staff
 CREATE TABLE staff(
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT,
     salary DECIMAL(7,2) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
@@ -199,7 +199,7 @@ CREATE TABLE staff(
 -- Delivery Manager
 CREATE TABLE delivery_manager(
     delivery_manager_id INT AUTO_INCREMENT PRIMARY KEY,
-    staff_id INT NOT NULL,
+    staff_id INT,
     FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
@@ -208,9 +208,9 @@ CREATE TABLE delivery_manager(
 
 -- Train schedule
 CREATE TABLE train_schedule(
-    order_id INT AUTO_INCREMENT PRIMARY KEY,
-    train_time_table_id INT NOT NULL,
-    delivery_manager_id INT NOT NULL,
+    order_id INT PRIMARY KEY,
+    train_time_table_id INT,
+    delivery_manager_id INT,
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
@@ -227,7 +227,7 @@ CREATE TABLE train_schedule(
 
 -- Covered Area
 CREATE TABLE covered_area(
-    truck_route_id INT NOT NULL,
+    truck_route_id INT,
     town VARCHAR(20) NOT NULL,
     meet_position INT NOT NULL,
     FOREIGN KEY (truck_route_id)
@@ -240,12 +240,12 @@ CREATE TABLE covered_area(
 -- Truck Schedule
 CREATE TABLE truck_schedule(
     truck_schedule_id INT AUTO_INCREMENT PRIMARY KEY,
-    truck_route_id INT NOT NULL,
-    truck_id INT  NOT NULL,
+    truck_route_id INT,
+    truck_id INT ,
     date_time DATETIME  NOT NULL,
-    store_manager_id INT  NOT NULL,
-    driver_id INT  NOT NULL,
-    driver_assistant_id INT  NOT NULL,
+    store_manager_id INT,
+    driver_id INT ,
+    driver_assistant_id INT,
     FOREIGN KEY (truck_route_id)
         REFERENCES truck_route(truck_route_id)
         ON UPDATE CASCADE
@@ -270,8 +270,8 @@ CREATE TABLE truck_schedule(
 
 -- Scheduled Order
 CREATE TABLE scheduled_order (
-    order_id INT  NOT NULL, 
-    truck_schedule_id INT  NOT NULL, 
+    order_id INT, 
+    truck_schedule_id INT , 
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
