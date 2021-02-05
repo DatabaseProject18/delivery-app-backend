@@ -92,16 +92,16 @@ CREATE TABLE order_table(
 -- Payment Method Table
 CREATE TABLE payment_method(
     payment_method_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50)
+    name VARCHAR(50) NOT NULL
 );
 
 
 -- Payment Table
 CREATE TABLE payment(
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    payment_method INT,
-    amount DECIMAL(12,2),
+    order_id INT NOT NULL,
+    payment_method INT NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
     payment_date DATE,
     FOREIGN KEY (order_id) 
         REFERENCES order_table(order_id)
@@ -123,10 +123,10 @@ CREATE TABLE product_category(
 CREATE TABLE product
 (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(100),
+    product_name VARCHAR(100) NOT NULL,
     category_id INT,
-    product_volume DECIMAL(7,2),
-    unit_price DECIMAL(7,2),
+    product_volume DECIMAL(7,2) NOT NULL,
+    unit_price DECIMAL(7,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
     FOREIGN KEY (category_id)
@@ -137,10 +137,10 @@ CREATE TABLE product
 
 --  Ordered product 
 CREATE TABLE ordered_product(
-    order_id INT,
-    product_id INT,
-    quantity DECIMAL(7,2),
-    item_price DECIMAL(7,2),
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity DECIMAL(7,2) NOT NULL,
+    item_price DECIMAL(7,2) NOT NULL,
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
@@ -155,16 +155,16 @@ CREATE TABLE ordered_product(
 -- Truck table
 CREATE TABLE truck(
     truck_id INT AUTO_INCREMENT PRIMARY KEY,
-    registration_no VARCHAR(20),
-    truck_capacity DECIMAL(5, 2)
+    registration_no VARCHAR(20) NOT NULL,
+    truck_capacity DECIMAL(5, 2) NOT NULL
 );
 
 -- Train table
 CREATE TABLE train(
     train_id INT AUTO_INCREMENT PRIMARY KEY,
-    train_name VARCHAR(50),
-    train_capacity DECIMAL(5, 2),
-    train_route_id INT,
+    train_name VARCHAR(50) NOT NULL,
+    train_capacity DECIMAL(5, 2) NOT NULL,
+    train_route_id INT NOT NULL,
     FOREIGN KEY (train_route_id)
         REFERENCES train_route(train_route_id)
         ON UPDATE CASCADE
@@ -174,7 +174,7 @@ CREATE TABLE train(
 -- Train time table
 CREATE TABLE train_time_table(
     train_time_table_id INT AUTO_INCREMENT PRIMARY KEY,
-    train_id INT,
+    train_id INT NOT NULL,
     day VARCHAR(10),
     start_time TIME,
     finish_time TIME,
