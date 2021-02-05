@@ -54,19 +54,35 @@ interface QueryData {
 
 const select = (data: QueryData) => (obj: TransferObj): TransferObj => {
   //return statement same as this
-  //const b: TransferObj = { sql: "", data: [] };
-  obj.sql+= 'SELECT';
+  obj.sql += 'SELECT';
   if (data.select) {
     obj.sql += ' ?? ';
     obj.data.push(data.select);
   }
-  else {
+  else if(data.select===null){
     obj.sql+=' * '
   }
   return obj;
 };
 
-const form = (data: QueryData) => (obj: TransferObj): TransferObj => {
-  
-  return;
- }
+const from = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  obj.sql += 'FROM ?? ';
+  obj.data.push(data.from);
+  return obj;
+};
+
+const where = (data: QueryData) => (obj: TransferObj): TransferObj => { 
+  if (data.where) {
+    obj.sql += 'WHERE '
+    for (let i = 0; i < data.where.length; i++) {
+      obj.sql += `?? ${data.where[i].comOperator} ? `;
+      obj.data.push(data.where[i].columnName);
+      obj.data.push(data.where[i].value);
+      if (i != data.where.length-1) {
+        obj.sql += `${data.operator} `;
+      }
+    }
+  }
+  return obj;
+}
+
