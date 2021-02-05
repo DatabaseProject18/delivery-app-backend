@@ -91,8 +91,7 @@ CREATE TABLE order_table(
 
 -- Payment Method Table
 CREATE TABLE payment_method(
-    payment_method_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) PRIMARY KEY
 );
 
 
@@ -100,15 +99,15 @@ CREATE TABLE payment_method(
 CREATE TABLE payment(
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
-    payment_method INT NOT NULL,
-    amount DECIMAL(12,2) NOT NULL,
+    payment_method VARCHAR(50),
+    amount DECIMAL(12,2),
     payment_date DATE,
     FOREIGN KEY (order_id) 
         REFERENCES order_table(order_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
     FOREIGN KEY (payment_method) 
-        REFERENCES payment_method(payment_method_id)
+        REFERENCES payment_method(name)
         ON UPDATE CASCADE
         ON DELETE CASCADE   
 );
@@ -189,18 +188,19 @@ CREATE TABLE train_time_table(
 -- Staff
 CREATE TABLE staff(
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    salary DECIMAL(7,2),
+    user_id INT,
+    salary DECIMAL(7,2) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-)
+);
 
 -- Delivery Manager
 CREATE TABLE delivery_manager(
-    delivery_manager_id INT PRIMARY KEY,
-    FOREIGN KEY (delivery_manager_id)
+    delivery_manager_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
+    FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -228,8 +228,8 @@ CREATE TABLE train_schedule(
 -- Covered Area
 CREATE TABLE covered_area(
     truck_route_id INT,
-    town VARCHAR(20),
-    meet_position INT,
+    town VARCHAR(20) NOT NULL,
+    meet_position INT NOT NULL,
     FOREIGN KEY (truck_route_id)
         REFERENCES truck_route(truck_route_id)
         ON UPDATE CASCADE
@@ -237,35 +237,14 @@ CREATE TABLE covered_area(
     PRIMARY KEY (truck_route_id,town)
 );
 
-
--- Driver
-CREATE TABLE driver(
-    driver_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    address VARCHAR(255),
-    birth_date DATE,
-    total_work_hours DECIMAL(5,2)
-);
-
--- Driver Assistant
-CREATE TABLE driver_assistant(
-    driver_assistant_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    address VARCHAR(255),
-    birth_date DATE,
-    total_work_hours DECIMAL(5,2)
-);
-
 -- Truck Schedule
 CREATE TABLE truck_schedule(
-    truck_schedule_id INT PRIMARY KEY,
+    truck_schedule_id INT AUTO_INCREMENT PRIMARY KEY,
     truck_route_id INT,
-    truck_id INT,
-    date_time DATETIME,
+    truck_id INT ,
+    date_time DATETIME  NOT NULL,
     store_manager_id INT,
-    driver_id INT,
+    driver_id INT ,
     driver_assistant_id INT,
     FOREIGN KEY (truck_route_id)
         REFERENCES truck_route(truck_route_id)
@@ -292,7 +271,7 @@ CREATE TABLE truck_schedule(
 -- Scheduled Order
 CREATE TABLE scheduled_order (
     order_id INT, 
-    truck_schedule_id INT, 
+    truck_schedule_id INT , 
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
@@ -311,6 +290,7 @@ CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
+    status BOOLEAN DEFAULT true,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
@@ -326,10 +306,9 @@ CREATE TABLE user_contact_number(
     PRIMARY KEY(user_id,contact_no)
 );
 
--- Customer Type SHOULD CHANGE
+-- Customer Type
 CREATE TABLE customer_type(
-    type_id INT PRIMARY KEY,
-    type VARCHAR(50)
+    type VARCHAR(50) PRIMARY KEY
 );
 
 -- Company Manaager 
