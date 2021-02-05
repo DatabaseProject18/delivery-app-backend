@@ -99,7 +99,7 @@ CREATE TABLE payment_method(
 -- Payment Table
 CREATE TABLE payment(
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
+    order_id INT,
     payment_method INT NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
     payment_date DATE,
