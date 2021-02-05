@@ -86,3 +86,22 @@ const where = (data: QueryData) => (obj: TransferObj): TransferObj => {
   return obj;
 }
 
+const deleteTable = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if(data.delete){
+    obj.sql += 'DELETE'
+  }
+  return obj;
+}
+
+const join = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if(data.join){
+    obj.sql += "JOIN ";
+    for(let i=0; i < Object.keys(data.join).length; i++){
+      obj.sql += "?? USING(?) ";
+      obj.data.push(Object.keys(data.join)[i]);
+      obj.data.push(data.join[Object.keys(data.join)[i]]);
+    }
+  }
+  return obj;
+}
+
