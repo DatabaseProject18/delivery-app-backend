@@ -36,9 +36,11 @@ CREATE TABLE user_data(
 
 -- Customer Table
 CREATE TABLE customer(
-    customer_id INT PRIMARY KEY,
-    type VARCHAR(50) NOT NU,
-    FOREIGN KEY (customer_id)
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    type VARCHAR(50) NOT NULL,
+    FOREIGN KEY (user_id)
+
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -47,8 +49,8 @@ CREATE TABLE customer(
 -- Train Route
 CREATE TABLE train_route(
     train_route_id INT AUTO_INCREMENT PRIMARY KEY,
-    distance DECIMAL(5,2),
-    average_time TIME,
+    distance DECIMAL(5,2) NOT NULL,
+    average_time DECIMAL(3,2) NOT NULL,
     store_id INT,
     FOREIGN KEY (store_id)
         REFERENCES store(store_id)
@@ -59,8 +61,8 @@ CREATE TABLE train_route(
 -- Truck route
 CREATE TABLE truck_route(
     truck_route_id INT AUTO_INCREMENT PRIMARY KEY,
-    distance DECIMAL(5,2),
-    average_time TIME,
+    distance DECIMAL(5,2) NOT NULL,
+    average_time DECIMAL(3,2) NOT NULL,
     train_route_id INT,
     FOREIGN KEY (train_route_id)
         REFERENCES train_route(train_route_id)
@@ -72,13 +74,14 @@ CREATE TABLE truck_route(
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_date DATE,
-    delivery_date DATE,
-    customer_id INT,
+    order_date DATE NOT NULL,
+    delivery_date DATE NOT NULL,
+    user_id INT,
     route_id INT,
-    cost DECIMAL(12, 2), 
-    FOREIGN KEY (customer_id) 
-        REFERENCES customer(customer_id)
+    cost DECIMAL(12, 2) NOT NULL, 
+    FOREIGN KEY (user_id) 
+        REFERENCES user_data(user_id)
+
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (route_id) 
