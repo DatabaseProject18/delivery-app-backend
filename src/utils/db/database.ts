@@ -103,5 +103,34 @@ const join = (data: QueryData) => (obj: TransferObj): TransferObj => {
     }
   }
   return obj;
-}
+};
+
+const order = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.order){
+    obj.sql += "ORDER BY ";
+    let tempArray = [];
+    for (let [key, value] of Object.entries(data.order)) {
+      tempArray.push("?? ??");
+      obj.data.push(key);
+      obj.data.push(value);
+    }
+    obj.sql += tempArray.join(", ");
+  }
+  return obj
+};
+
+const limit = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.limit){
+    obj.sql += "LIMIT ";
+    if (obj.data.length === 1){
+      obj.sql += "??";
+      obj.data.push(data.limit[0]);
+    }else {
+      obj.sql += "??, ??";
+      obj.data.push(data.limit[0]);
+      obj.data.push(data.limit[1]);
+    }
+  }
+  return obj
+};
 
