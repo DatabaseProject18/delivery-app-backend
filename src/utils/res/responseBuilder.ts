@@ -3,16 +3,16 @@ import { Response } from "express";
 export interface ResponseResult {
   resCode?: number;
   error?: {
-    db: string;
-    auth: string;
-    validate: {
-      [name: string]: String;
-    };
+    single: string;
+    multiple: Array<string> | { [name: string]: string };
   };
   data?: {
-    db: Array<{ [name: string]: any }>;
+    single: Primitive;
+    multiple: Array<any> | { [name: string]: any };
   };
 }
+
+type Primitive = string | number | boolean;
 
 export const responseBulider = (res: Response) => (
   result: ResponseResult

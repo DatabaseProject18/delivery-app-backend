@@ -378,4 +378,8 @@ CREATE TABLE admin(
         ON DELETE CASCADE 
 );
 
+CREATE TABLE refresh_token(
+    token VARCHAR(255) PRIMARY KEY
+)
+
 -- Dilshan
