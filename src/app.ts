@@ -1,36 +1,13 @@
 const express = require("express");
 const app = express();
-import mysql, { Connection } from "mysql";
+import homeRouter from "./routes/home";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var con: Connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "7019$DIL$c@t",
-  database: "university",
-});
+app.use("/", homeRouter);
 
-// con.connect(function (err) {
-//   console.log("Connection Error--", err);
-// });
-
-// console.log(con.query("SELECT * FROM student"));
-
-con.connect(function (err) {
-  if (err) console.log(err);
-  con.query("SELECT * FROM student", function (err, result, fields) {
-    if (err) console.log(err);
-    console.log(result);
-  });
-});
-
-app.get("/", function name(req, res) {
-  res.status(200).send("Hello World!");
-});
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 
 app.listen(port, () => {
   console.log(`Server is listening in ${port}`);

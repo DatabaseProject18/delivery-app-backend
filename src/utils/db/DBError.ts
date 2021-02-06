@@ -31,11 +31,7 @@ const errors: { [name: string]: ErrorDetail } = {
   },
   MY_ROW_NOT_FOUND: {
     resCode: 404,
-    msg: "There are no avialable data",
-  },
-  MY_MULTI_ROW: {
-    resCode: 417,
-    msg: "There is not expected output.",
+    msg: "Data are not found",
   },
   DEFAULT: {
     resCode: 500,

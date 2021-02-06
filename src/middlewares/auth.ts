@@ -21,7 +21,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => async (
       response.resCode = 401;
       response.error.single = "Authorization token is not provided";
       responseBulider(res)(response);
-      return;
+      return new Promise((resolve) => resolve());
     }
 
     const payload = await validateToken(token, TokenType.ACCESS);
@@ -30,7 +30,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => async (
       response.resCode = 403;
       response.error.single = "Authorization token is invalid";
       responseBulider(res)(response);
-      return;
+      return new Promise((resolve) => resolve());
     }
 
     if (payload.userType !== authSchema.userType) {
@@ -38,7 +38,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => async (
       response.error.single =
         "You have not permission to access these resources";
       responseBulider(res)(response);
-      return;
+      return new Promise((resolve) => resolve());
     }
 
     _.set(req, "user", payload);

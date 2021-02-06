@@ -11,25 +11,26 @@ const validateData = (schema: ValidateHandlerData) => (
   res: Response,
   next: NextFunction
 ): void => {
-  let result: ValidateResult;
-  let response: ResponseResult;
+  if (schema) {
+    let result: ValidateResult;
+    let response: ResponseResult;
 
-  const method = ["body", "query", "params"];
+    const method = ["body", "query", "params"];
 
-  method.map((m) => {
-    if (schema[m]) {
-      result = validate(schema[m], req[m]);
+    method.map((m) => {
+      if (schema[m]) {
+        result = validate(schema[m], req[m]);
 
-      if (result) {
-        response.resCode = 400;
-        response.error.multiple = result;
-        responseBulider(res)(response);
-        return;
+        if (result) {
+          response.resCode = 400;
+          response.error.multiple = result;
+          responseBulider(res)(response);
+          return;
+        }
       }
-
-      next();
-    }
-  });
+    });
+  }
+  next();
 };
 
 export default validateData;
