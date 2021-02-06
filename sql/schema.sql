@@ -40,6 +40,7 @@ CREATE TABLE customer(
     user_id INT,
     type VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id)
+
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -80,6 +81,7 @@ CREATE TABLE order_table(
     cost DECIMAL(12, 2) NOT NULL, 
     FOREIGN KEY (user_id) 
         REFERENCES user_data(user_id)
+
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (route_id) 
