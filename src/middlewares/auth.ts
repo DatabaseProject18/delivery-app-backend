@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import _ from "lodash";
 import { responseBulider, ResponseResult } from "../utils/res/responseBuilder";
 import {
   AuthHandlerData,
@@ -6,11 +7,11 @@ import {
   validateToken,
 } from "../utils/token/tokenManager";
 
-const authorizeUser = (
+const authorizeUser = (authSchema: AuthHandlerData) => async (
   req: Request,
   res: Response,
   next: NextFunction
-) => async (authSchema: AuthHandlerData): Promise<void> => {
+): Promise<void> => {
   if (authSchema.hasToken) {
     const response: ResponseResult = {};
 
@@ -18,7 +19,7 @@ const authorizeUser = (
 
     if (!token) {
       response.resCode = 401;
-      response.error.auth = "Authorization token is not provided";
+      response.error.single = "Authorization token is not provided";
       responseBulider(res)(response);
       return;
     }
@@ -27,17 +28,20 @@ const authorizeUser = (
 
     if (!payload) {
       response.resCode = 403;
-      response.error.auth = "Authorization token is invalid";
+      response.error.single = "Authorization token is invalid";
       responseBulider(res)(response);
       return;
     }
 
     if (payload.userType !== authSchema.userType) {
       response.resCode = 403;
-      response.error.auth = "You have not permission to access these resources";
+      response.error.single =
+        "You have not permission to access these resources";
       responseBulider(res)(response);
       return;
     }
+
+    _.set(req, "user", payload);
   }
   next();
 };
