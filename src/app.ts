@@ -1,14 +1,13 @@
 const express = require("express");
 const app = express();
+import homeRouter from "./routes/home";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", function name(req, res) {
-  res.status(200).send("Hello World!");
-});
+app.use("/", homeRouter);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 
 app.listen(port, () => {
   console.log(`Server is listening in ${port}`);

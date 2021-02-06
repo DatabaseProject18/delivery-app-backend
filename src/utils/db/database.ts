@@ -1,168 +1,255 @@
-const sql = {
-    select: ["name", "age"],
-    insert: {
-      name: "Dilshan",
-      age: "23",
-    },
-    where: {},
-  };
-  
-  interface TransferObj {
-    sql: String;
-    data: Array<any>;
-  }
-  
-  interface WhereExp {
-    columnName: String;
-    comOperator: String;
-    value: String;
-  }
+import config from "config";
+import _, { isArray } from "lodash";
+import { pipe } from "lodash/fp";
+import mysql, { Connection, FieldInfo, MysqlError } from "mysql";
+import { ResponseResult } from "../res/responseBuilder";
+import getErrorDetails, { ErrorDetail } from "./DBError";
 
-  interface ValuesExp {
-      tableName: String;
-      values: Array<String>;
+interface TransferObj {
+  sql: string;
+  data: Array<any>;
+}
+
+interface WhereExp {
+  columnName: string;
+  comOperator: string;
+  value: any;
+}
+
+interface ValuesExp {
+  tableName: string;
+  columns: Array<string> | null;
+  values: Array<any>;
+}
+
+interface UpdateExp {
+  tableName: string;
+  values: { [name: string]: any };
+}
+
+interface QueryData {
+  select?: Array<String> | null;
+  from?: string;
+  operator?: string;
+  where?: Array<WhereExp>;
+  insert?: ValuesExp;
+  update?: UpdateExp;
+  delete?: boolean;
+  join?: { [name: string]: string };
+  order?: { [name: string]: string };
+  limit?: Array<number>;
+}
+
+const connection: Connection = mysql.createConnection({
+  host: config.get("database.host"),
+  user: config.get("database.user"),
+  password: config.get("database.password"),
+  database: config.get("database.name"),
+});
+
+const select = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.select) {
+    obj.sql += "SELECT";
+    obj.sql += " ?? ";
+    obj.data.push(data.select);
+  } else if (data.select === null) {
+    obj.sql += "SELECT";
+    obj.sql += " * ";
   }
-  
-  interface QueryData {
-    select?: Array<String> | null;
-    from: String;
-    operator?: String;
-    where?: Array<WhereExp>;
-    insert?: Array<ValuesExp> | null;
-    update?: object;
-    delete?: boolean;
-    join?: object;
-    order?: object;
-    limit?: Array<number>;
-  }
-  
-  // function select(sql:String):String{
-  //     if (sql){
-  
-  //     }
-  //     return "";
-  // }
-  
-  // const selct = data => a => b => c => {
-  
-  // }
-  // selct("df");
-  
-  // const fun = data => obj => {
-  
-  // }
-  
-  // obj={
-  //     sql:"",
-  //     data:[[],{}]
-  // }
-  
-  const select = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    //return statement same as this
-    obj.sql += 'SELECT';
-    if (data.select) {
-      obj.sql += ' ?? ';
-      obj.data.push(data.select);
-    }
-    else if(data.select===null){
-      obj.sql+=' * '
-    }
-    return obj;
-  };
-  
-  const from = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    obj.sql += 'FROM ?? ';
+  return obj;
+};
+
+const from = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.from) {
+    obj.sql += "FROM ?? ";
     obj.data.push(data.from);
-    return obj;
-  };
-  
-  const where = (data: QueryData) => (obj: TransferObj): TransferObj => { 
-    if (data.where) {
-      obj.sql += 'WHERE '
-      for (let i = 0; i < data.where.length; i++) {
-        obj.sql += `?? ${data.where[i].comOperator} ? `;
-        obj.data.push(data.where[i].columnName);
-        obj.data.push(data.where[i].value);
-        if (i != data.where.length-1) {
-          obj.sql += `${data.operator} `;
-        }
-      }
-    }
-    return obj;
   }
-  
-  const insert = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    if(data.insert){
-        obj.sql += 'INSERT INTO'
-        for (let i = 0; i < data.insert.length; i++) {
-            obj.sql += "VALUES";
-            obj.data.push(data.insert[i].tableName);
-            obj.data.push(data.insert[i].values);
-        }
-        return obj;
-    }
-  }
+  return obj;
+};
 
-  const update = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    if(data.update){
-      obj.sql += 'UPDATE'
-      for(let i=0; i < Object.keys(data.update).length; i++){
-        obj.sql += "SET";
-        obj.data.push(Object.keys(data.update)[i]);
-        obj.data.push(data.join[Object.keys(data.update)[i]]);
+const where = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.where) {
+    obj.sql += "WHERE ";
+    for (let i = 0; i < data.where.length; i++) {
+      obj.sql += `?? ${data.where[i].comOperator} ? `;
+      obj.data.push(data.where[i].columnName);
+      obj.data.push(data.where[i].value);
+      if (i !== data.where.length - 1) {
+        obj.sql += `${data.operator} `;
       }
     }
-    return obj;
   }
-  
+  return obj;
+};
+
+const insert = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.insert) {
+    obj.sql += "INSERT INTO ??";
+    obj.data.push(data.insert.tableName);
+
+    if (data.insert.columns !== null) {
+      obj.sql += " (??)";
+      obj.data.push(data.insert.columns);
+    }
+
+    obj.sql += " VALUES";
+
+    if (typeof data.insert.values[0] !== "object") {
+      obj.sql += " (?)";
+      obj.data.push(data.insert.values);
+    } else {
+      obj.sql += " ?";
+      obj.data.push(data.insert.values);
+    }
+  }
+  return obj;
+};
+
+const update = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.update) {
+    obj.sql += "UPDATE ?? SET ";
+    obj.data.push(data.update.tableName);
+
+    Object.keys(data.update.values).map((key, index) => {
+      if (index !== 0) obj.sql += `,`;
+
+      obj.sql += `?? = ?`;
+      obj.data.push(key);
+      obj.data.push(data.update.values[key]);
+    });
+  }
+  return obj;
+};
+
 const order = (data: QueryData) => (obj: TransferObj): TransferObj => {
-  if (data.order){
+  if (data.order) {
     obj.sql += "ORDER BY ";
     let tempArray = [];
     for (let [key, value] of Object.entries(data.order)) {
-      tempArray.push("?? ??");
+      tempArray.push(`?? ${value}`);
       obj.data.push(key);
-      obj.data.push(value);
     }
     obj.sql += tempArray.join(", ");
   }
-  return obj
+  return obj;
 };
 
 const limit = (data: QueryData) => (obj: TransferObj): TransferObj => {
-  if (data.limit){
-    obj.sql += "LIMIT ";
-    if (obj.data.length === 1){
-      obj.sql += "??";
-      obj.data.push(data.limit[0]);
-    }else {
-      obj.sql += "??, ??";
-      obj.data.push(data.limit[0]);
-      obj.data.push(data.limit[1]);
-    }
+  if (data.limit) {
+    obj.sql += " LIMIT ?";
+    obj.data.push(data.limit);
   }
-  return obj
+  return obj;
 };
 
+const deleteTable = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.delete) {
+    obj.sql += "DELETE ";
+  }
+  return obj;
+};
 
-  const deleteTable = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    if(data.delete){
-      obj.sql += 'DELETE'
-    }
-    return obj;
+const join = (data: QueryData) => (obj: TransferObj): TransferObj => {
+  if (data.join) {
+    Object.keys(data.join).map((key) => {
+      obj.sql += "JOIN ?? USING(??) ";
+      obj.data.push(key);
+      obj.data.push(data.join[key]);
+    });
   }
-  
-  const join = (data: QueryData) => (obj: TransferObj): TransferObj => {
-    if(data.join){
-      obj.sql += "JOIN ";
-      for(let i=0; i < Object.keys(data.join).length; i++){
-        obj.sql += "?? USING(?) ";
-        obj.data.push(Object.keys(data.join)[i]);
-        obj.data.push(data.join[Object.keys(data.join)[i]]);
-      }
-    }
-    return obj;
+  return obj;
+};
+
+const resultGenrator = (
+  error?: MysqlError,
+  result?: any,
+  field?: FieldInfo[]
+): ResponseResult => {
+  let responseResult: ResponseResult = {};
+  if (error) {
+    const errorDetails: ErrorDetail = getErrorDetails(error.code);
+    responseResult.resCode = errorDetails.resCode;
+    _.set(responseResult, "error.single", errorDetails.msg);
+    return responseResult;
   }
-  
-  
- 
+  responseResult.resCode = 200;
+  if (isArray(result)) {
+    if (result.length === 0) {
+      const errorDetails: ErrorDetail = getErrorDetails("MY_ROW_NOT_FOUND");
+      responseResult.resCode = errorDetails.resCode;
+      _.set(responseResult, "error.single", errorDetails.msg);
+      return responseResult;
+    }
+    if (result.length === 1) {
+      _.set(responseResult, "data.single", result[0]);
+      return responseResult;
+    }
+    const newResult: Array<{ [name: string]: any }> = result.map((row) =>
+      JSON.parse(JSON.stringify(row))
+    );
+    _.set(responseResult, "data.multiple", newResult);
+  } else {
+    _.set(responseResult, "data.single", "Success");
+  }
+  return responseResult;
+};
+
+const queryExecutor = (query: TransferObj): Promise<ResponseResult> => {
+  return new Promise((resolve) => {
+    connection.connect(function (error) {
+      if (error) return resolve(resultGenrator(error));
+    });
+
+    connection.query(query.sql, query.data, (error, result, field) => {
+      resolve(resultGenrator(error, result, field));
+    });
+
+    connection.end();
+  });
+};
+
+export const queryBuilder = async (
+  schema: QueryData
+): Promise<ResponseResult> => {
+  const composeFunctions = pipe(
+    select(schema),
+    insert(schema),
+    deleteTable(schema),
+    update(schema),
+    from(schema),
+    join(schema),
+    where(schema),
+    order(schema),
+    limit(schema),
+    async (obj: TransferObj) => {
+      return await queryExecutor(obj);
+    }
+  );
+
+  const responseResult: Promise<ResponseResult> = composeFunctions({
+    sql: "",
+    data: [],
+  });
+
+  return responseResult;
+};
+
+export const call = (
+  name: string,
+  args: Array<any> = []
+): Promise<ResponseResult> => {
+  connection.connect(function (error) {
+    return new Promise((resolve) => resolve(resultGenrator(error)));
+  });
+
+  connection.query(`CALL ??(?)`, [name, args], (error, result, field) => {
+    const responseResult: ResponseResult = resultGenrator(error, result, field);
+    return new Promise((resolve) => {
+      resolve(responseResult);
+    });
+  });
+
+  return new Promise((resolve) => {
+    resolve({});
+  });
+};
