@@ -180,10 +180,6 @@ const resultGenrator = (
       _.set(responseResult, "error.single", errorDetails.msg);
       return responseResult;
     }
-    if (result.length === 1) {
-      _.set(responseResult, "data.single", result[0]);
-      return responseResult;
-    }
     const newResult: Array<{ [name: string]: any }> = result.map((row) =>
       JSON.parse(JSON.stringify(row))
     );
