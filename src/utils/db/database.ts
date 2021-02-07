@@ -192,15 +192,20 @@ const resultGenrator = (
 
 const queryExecutor = (query: TransferObj): Promise<ResponseResult> => {
   return new Promise((resolve) => {
-    connection.connect(function (error) {
-      if (error) return resolve(resultGenrator(error));
-    });
+    // connection.connect(function (error) {
+    //   if (error) {
+    //     console.log("OOO");
+    //     return resolve(resultGenrator(error));
+    //   }
+    // });
 
     connection.query(query.sql, query.data, (error, result, field) => {
       resolve(resultGenrator(error, result, field));
     });
 
-    connection.end();
+    // connection.end((err) => {
+    //   console.log(err);
+    // });
   });
 };
 

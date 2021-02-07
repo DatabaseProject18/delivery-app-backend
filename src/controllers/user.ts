@@ -16,18 +16,10 @@ const getStudents = (): RHandler => {
         return await queryBuilder({
           select: null,
           from: "student",
-          where: [
-            {
-              columnName: "ID",
-              comOperator: "=",
-              value: "00128",
-            },
-          ],
         });
       },
     ],
   };
-
   return rHandlerData;
 };
 
