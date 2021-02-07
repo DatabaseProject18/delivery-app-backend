@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import _ from "lodash";
 import { responseBulider, ResponseResult } from "../utils/res/responseBuilder";
 import {
   validate,
@@ -12,23 +13,25 @@ const validateData = (schema: ValidateHandlerData) => (
   next: NextFunction
 ): void => {
   if (schema) {
-    let result: ValidateResult;
-    let response: ResponseResult;
+    let response: ResponseResult = {};
 
     const method = ["body", "query", "params"];
 
     method.map((m) => {
       if (schema[m]) {
-        result = validate(schema[m], req[m]);
+        let result: ValidateResult = validate(schema[m], req[m]);
 
         if (result) {
-          response.resCode = 400;
-          response.error.multiple = result;
-          responseBulider(res)(response);
-          return;
+          _.set(response, `error.multiple.${m}`, result);
         }
       }
     });
+
+    if (response.error) {
+      response.resCode = 400;
+      responseBulider(res)(response);
+      return;
+    }
   }
   next();
 };

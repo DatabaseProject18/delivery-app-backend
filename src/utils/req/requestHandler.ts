@@ -36,15 +36,17 @@ const makeRequestHandlerArray = (
             responseResult: Promise<ResponseResult>
           ): Promise<ResponseResult> => {
             const data = await responseResult;
-            const tempFunc = func(req, res);
-            return await tempFunc(data);
+            if (!data.error) {
+              const tempFunc = func(req, res);
+              return await tempFunc(data);
+            } else {
+              return new Promise((resolve) => resolve(data));
+            }
           }
         );
       });
 
-      const responseHandler = async (
-        responseResult: Promise<ResponseResult>
-      ) => {
+      const resultHandler = async (responseResult: Promise<ResponseResult>) => {
         const data = await responseResult;
         if (!data.resCode) {
           data.resCode = 500;
@@ -55,7 +57,7 @@ const makeRequestHandlerArray = (
         responseBulider(res)(data);
       };
 
-      functions.push(responseHandler);
+      functions.push(resultHandler);
 
       const composeFunc = pipe(...functions);
       composeFunc(new Promise((resolve) => resolve({})));
