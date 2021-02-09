@@ -25,7 +25,7 @@ CREATE TABLE user_data(
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    UNIQUE email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     address VARCHAR(255) NOT NULL,
     birth_date DATE,
     registered_date DATE NOT NULL,
@@ -240,90 +240,6 @@ CREATE TABLE covered_area(
     PRIMARY KEY (truck_route_id,town)
 );
 
--- Truck Schedule
-CREATE TABLE truck_schedule(
-    truck_schedule_id INT AUTO_INCREMENT PRIMARY KEY,
-    truck_route_id INT,
-    truck_id INT ,
-    date_time DATETIME  NOT NULL,
-    store_manager_id INT,
-    driver_id INT ,
-    driver_assistant_id INT,
-    FOREIGN KEY (truck_route_id)
-        REFERENCES truck_route(truck_route_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (truck_id)
-        REFERENCES truck(truck_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (store_manager_id)
-        REFERENCES store_manager(store_manager_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-    FOREIGN KEY (driver_id)
-        REFERENCES driver(driver_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (driver_assistant_id)
-        REFERENCES driver_assistant(driver_assistant_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
--- Scheduled Order
-CREATE TABLE scheduled_order (
-    order_id INT, 
-    truck_schedule_id INT , 
-    FOREIGN KEY (order_id)
-        REFERENCES order_table(order_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (truck_schedule_id)
-        REFERENCES truck_schedule(truck_schedule_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY (order_id,truck_schedule_id)
-);
-
--- Dushan
-
--- User Account
-CREATE TABLE user_account(
-    user_id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
-    status BOOLEAN DEFAULT true,
-    FOREIGN KEY (user_id)
-        REFERENCES user_data(user_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
--- User Contact Number
-CREATE TABLE user_contact_number(
-    user_id INT,
-    contact_no VARCHAR(20) NOT NULL
-    FOREIGN KEY (user_id)
-        REFERENCES user_data(user_id)
-    PRIMARY KEY(user_id,contact_no)
-);
-
--- Customer Type
-CREATE TABLE customer_type(
-    type VARCHAR(50) PRIMARY KEY
-);
-
--- Company Manaager 
-CREATE TABLE company_manager(
-    company_manager_id INT AUTO_INCREMENT PRIMARY KEY,
-    staff_id INT
-    FOREIGN KEY (staff_id)
-        REFERENCES staff(staff_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
 -- Store Manager
 CREATE TABLE store_manager(
     store_manager_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -371,10 +287,93 @@ CREATE TABLE driver(
         ON DELETE CASCADE 
 );
 
+-- Truck Schedule
+CREATE TABLE truck_schedule(
+    truck_schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    truck_route_id INT,
+    truck_id INT ,
+    date_time DATETIME  NOT NULL,
+    store_manager_id INT,
+    driver_id INT ,
+    driver_assistant_id INT,
+    FOREIGN KEY (truck_route_id)
+        REFERENCES truck_route(truck_route_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (truck_id)
+        REFERENCES truck(truck_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (store_manager_id)
+        REFERENCES store_manager(store_manager_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (driver_id)
+        REFERENCES driver(driver_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (driver_assistant_id)
+        REFERENCES driver_assistant(driver_assistant_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- Scheduled Order
+CREATE TABLE scheduled_order (
+    order_id INT, 
+    truck_schedule_id INT , 
+    FOREIGN KEY (order_id)
+        REFERENCES order_table(order_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (truck_schedule_id)
+        REFERENCES truck_schedule(truck_schedule_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY (order_id,truck_schedule_id)
+);
+
+-- Dushan
+
+-- User Account
+CREATE TABLE user_account(
+    user_id INT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    status BOOLEAN DEFAULT true,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- User Contact Number
+CREATE TABLE user_contact_number(
+    user_id INT,
+    contact_no VARCHAR(20) NOT NULL,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY(user_id,contact_no)
+);
+
+
+-- Company Manaager 
+CREATE TABLE company_manager(
+    company_manager_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
+    FOREIGN KEY (staff_id)
+        REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+
 -- Admin
 CREATE TABLE admin(
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT
+    user_id INT,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
