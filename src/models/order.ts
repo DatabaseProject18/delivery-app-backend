@@ -1,11 +1,40 @@
+import { where } from "lodash/fp";
 import { queryBuilder } from "../utils/db/database";
 
 const pastOrders = (user_id: number) => {
     return queryBuilder({
-        select: ["order_id", "order_date", "cost"],
+        select: ["order_id", "order_date", "cost","order_status"],
         from: "order_table",
-        where: [{ columnName: "user_id", comOperator: "=", value: user_id }]
+        operator:"AND",
+        where: [{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_status", comOperator: "!=", value: "deleted" }]
     });
 }
 
-export { pastOrders };
+const pastOrder = (user_id: number, order_id:number) => {
+    return queryBuilder({
+        select: null,
+        from: "ordered_product",
+        join: { "product": "product_id", "order_table": "order_id" },
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+
+const deleteFromCart = (user_id: number, order_id:number) => {
+    return queryBuilder({
+        update: { tableName: 'order_table', values: { "order_status": "deleted" } },
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+
+const CancelAnOrder = (user_id: number, order_id:number) => {
+    return queryBuilder({
+        update: { tableName: 'order_table', values: { "order_status": "canceled" } },
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+
+
+export { pastOrders,pastOrder,deleteFromCart,CancelAnOrder };

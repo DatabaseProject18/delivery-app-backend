@@ -71,23 +71,29 @@ CREATE TABLE truck_route(
     
 );
 
+CREATE TABLE order_status(
+    status VARCHAR(10) PRIMARY KEY
+);
+
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     order_date DATE NOT NULL,
     delivery_date DATE NOT NULL,
-    user_id INT,
+    customer_id INT,
     route_id INT,
     cost DECIMAL(12, 2) NOT NULL, 
-    FOREIGN KEY (user_id) 
-        REFERENCES user_data(user_id)
-
+    order_status VARCHAR(10) DEFAULT "cart",
+    FOREIGN KEY (customer_id) 
+        REFERENCES customer(customer_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (route_id) 
         REFERENCES truck_route(truck_route_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE    
+        ON DELETE CASCADE,
+    FOREIGN KEY (order_status) 
+        REFERENCES order_status(order_status)
 );
 
 -- Kasun
