@@ -15,7 +15,7 @@ const getStudents = (): RHandler => {
       ): Promise<ResponseResult> => {
         return await queryBuilder({
           select: null,
-          from: "city",
+          from: "student",
         });
       },
     ],
