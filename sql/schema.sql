@@ -72,7 +72,7 @@ CREATE TABLE truck_route(
 );
 
 CREATE TABLE order_status(
-    status VARCHAR(10) PRIMARY KEY
+    order_status VARCHAR(10) PRIMARY KEY
 );
 
 -- Order Table
