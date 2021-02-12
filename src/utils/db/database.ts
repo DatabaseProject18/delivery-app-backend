@@ -40,12 +40,18 @@ interface QueryData {
   limit?: Array<number>;
 }
 
-const connection: Connection = mysql.createConnection({
-  host: config.get("database.host"),
-  user: config.get("database.user"),
-  password: config.get("database.password"),
-  database: config.get("database.name"),
-});
+let connection: Connection;
+
+const connect = () => {
+  if (!connection || connection.state === "disconnected") {
+    connection = mysql.createConnection({
+      host: config.get("database.host"),
+      user: config.get("database.user"),
+      password: config.get("database.password"),
+      database: config.get("database.name"),
+    });
+  }
+};
 
 const select = (data: QueryData) => (obj: TransferObj): TransferObj => {
   if (data.select) {
@@ -167,6 +173,7 @@ const resultGenrator = (
 ): ResponseResult => {
   let responseResult: ResponseResult = {};
   if (error) {
+    console.log(error);
     const errorDetails: ErrorDetail = getErrorDetails(error.code);
     responseResult.resCode = errorDetails.resCode;
     _.set(responseResult, "error.single", errorDetails.msg);
@@ -192,20 +199,11 @@ const resultGenrator = (
 
 const queryExecutor = (query: TransferObj): Promise<ResponseResult> => {
   return new Promise((resolve) => {
-    // connection.connect(function (error) {
-    //   if (error) {
-    //     console.log("OOO");
-    //     return resolve(resultGenrator(error));
-    //   }
-    // });
+    connect();
 
     connection.query(query.sql, query.data, (error, result, field) => {
       resolve(resultGenrator(error, result, field));
     });
-
-    // connection.end((err) => {
-    //   console.log(err);
-    // });
   });
 };
 
@@ -239,18 +237,11 @@ export const call = (
   name: string,
   args: Array<any> = []
 ): Promise<ResponseResult> => {
-  connection.connect(function (error) {
-    return new Promise((resolve) => resolve(resultGenrator(error)));
-  });
-
-  connection.query(`CALL ??(?)`, [name, args], (error, result, field) => {
-    const responseResult: ResponseResult = resultGenrator(error, result, field);
-    return new Promise((resolve) => {
-      resolve(responseResult);
-    });
-  });
-
   return new Promise((resolve) => {
-    resolve({});
+    connect();
+
+    connection.query(`CALL ??(?)`, [name, args], (error, result, field) => {
+      resolve(resultGenrator(error, result, field));
+    });
   });
 };

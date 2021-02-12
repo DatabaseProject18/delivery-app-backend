@@ -18,7 +18,11 @@ export const validate = (
   if (result.error) {
     let obj = {};
     result.error.details.map(({ message, path }) => {
-      const modifiedMsg = _.replace(_.trim(message, '"'), '"', "");
+      const modifiedMsg = _.replace(
+        _.replace(_.trim(message, ']"'), '"', ""),
+        "[ref:",
+        "equal to the "
+      );
       _.set(obj, _.join(path, "."), modifiedMsg);
     });
     return obj;

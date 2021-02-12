@@ -27,7 +27,6 @@ CREATE TABLE user_data(
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     address VARCHAR(255) NOT NULL,
-    birth_date DATE,
     registered_date DATE NOT NULL,
     user_type VARCHAR(50),
     FOREIGN KEY (user_type)
@@ -40,8 +39,11 @@ CREATE TABLE customer(
     user_id INT,
     type VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id)
-
         REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (type)
+        REFERENCES customer_type(type)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -344,8 +346,8 @@ CREATE TABLE scheduled_order (
 -- User Account
 CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
     status BOOLEAN DEFAULT true,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
@@ -356,12 +358,11 @@ CREATE TABLE user_account(
 -- User Contact Number
 CREATE TABLE user_contact_number(
     user_id INT,
-    contact_no VARCHAR(20) NOT NULL,
+    contact_no VARCHAR(20) PRIMARY KEY,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY(user_id,contact_no)
+        ON DELETE CASCADE
 );
 
 
