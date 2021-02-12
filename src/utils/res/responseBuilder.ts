@@ -3,12 +3,12 @@ import { Response } from "express";
 export interface ResponseResult {
   resCode?: number;
   error?: {
-    single: string;
-    multiple: Array<string> | { [name: string]: string };
+    single?: string;
+    multiple?: Array<string> | { [name: string]: string };
   };
   data?: {
-    single: Primitive;
-    multiple: Array<any> | { [name: string]: any };
+    single?: Primitive;
+    multiple?: Array<any> | { [name: string]: any };
   };
 }
 

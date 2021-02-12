@@ -2,11 +2,11 @@ import config from "config";
 import jwt from "jsonwebtoken";
 
 export interface AuthHandlerData {
-  hasToken: boolean;
+  hasToken?: boolean;
+  hasRefreshToken?: boolean;
+  hasAccessToken?: boolean;
   userType?: String;
 }
-
-export type TokenValidateResult = { [name: string]: any } | undefined;
 
 export enum TokenType {
   "ACCESS",
@@ -14,24 +14,33 @@ export enum TokenType {
 }
 
 export function generateAccessToken(
-  payload: { [name: string]: string },
+  payload: { [name: string]: any },
   expireTimeInMinutes: number
 ): string {
   return jwt.sign(payload, config.get("ACCESS_TOKEN_SECRET"), {
-    expireIn: `${expireTimeInMinutes}m`,
+    expiresIn: `${expireTimeInMinutes}m`,
   });
 }
 
-export function generateRefreshToken(payload: {
-  [name: string]: string;
-}): string {
+export function generateRefreshToken(payload: { [name: string]: any }): string {
   return jwt.sign(payload, config.get("REFRESH_TOKEN_SECRET"));
 }
 
-export async function validateToken(
+export function validateToken(
   token: string,
   type: TokenType
-): Promise<TokenValidateResult> {
-  const payload = await jwt.verify(token, config.get(`${type}_TOKEN_SECRET`));
-  return payload;
+): { [name: string]: any } {
+  let secret: string;
+  if (type === TokenType.ACCESS) secret = config.get(`ACCESS_TOKEN_SECRET`);
+  else secret = config.get(`REFRESH_TOKEN_SECRET`);
+
+  try {
+    const payload: { [name: string]: any } = jwt.verify(
+      token,
+      secret
+    ) as object;
+    return payload;
+  } catch (ex) {
+    return undefined;
+  }
 }
