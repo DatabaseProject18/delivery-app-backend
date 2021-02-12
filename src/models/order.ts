@@ -36,5 +36,21 @@ const CancelAnOrder = (user_id: number, order_id:number) => {
     });
 }
 
+const orderStatus = (user_id: number, order_id:number) => {
+    return queryBuilder({
+        select: ["order_status"],
+        from: "order_table",
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
 
-export { pastOrders,pastOrder,deleteFromCart,CancelAnOrder };
+const CreateAnOrder = (user_id: number) => {
+    return queryBuilder({
+        insert: { tableName: 'order_table', columns: ['order_id', 'order_date', 'delivery_date', 'customer_id', 'route_id', 'cost', 'order_status'], values: ['object']},
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: "user_id"}]        
+    })
+}
+
+export { pastOrders, pastOrder, deleteFromCart, CancelAnOrder, orderStatus, CreateAnOrder };

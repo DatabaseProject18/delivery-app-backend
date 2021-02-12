@@ -6,5 +6,7 @@ router.get('/PastOrders', handleRequest("order", "getPastOrders"));
 router.get('/PastOrders/:order_id', handleRequest("order", "getPastOrder"));
 router.patch('/OrderDeleteFromCart/:order_id', handleRequest("order", "orderDeleteFromCart"));
 router.patch('/CancelOrder/:order_id', handleRequest("order", "cancelOrder"));
+router.get('/OrderStatus/:order_id', handleRequest("order", "getOrderStatus"));
+router.get('/CreateOrder', handleRequest("order", "createOrder"));
 
 export default router;
