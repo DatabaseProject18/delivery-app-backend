@@ -1,5 +1,6 @@
 import { where } from "lodash/fp";
 import { queryBuilder } from "../utils/db/database";
+import { ResponseResult } from "../utils/res/responseBuilder";
 
 const pastOrders = (user_id: number) => {
     return queryBuilder({
@@ -36,5 +37,15 @@ const CancelAnOrder = (user_id: number, order_id:number) => {
     });
 }
 
+const getOrdersByTown = (town: String): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["order_id"],
+        from: "covered_area",
+        join: {"truck_schedule": "truck_route_id","scheduled_order": "truck_schedule_id"},
+        where: [{columnName: "town", comOperator: "=", value: town}],
+        order: {["date_time"]: "ASC"}
+    })
+}
 
-export { pastOrders,pastOrder,deleteFromCart,CancelAnOrder };
+
+export { pastOrders,pastOrder,deleteFromCart,CancelAnOrder, getOrdersByTown };

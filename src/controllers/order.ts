@@ -3,7 +3,7 @@ import Joi from "joi";
 import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { pastOrders, pastOrder,deleteFromCart,CancelAnOrder } from "../models/order";
+import { pastOrders, pastOrder,deleteFromCart,CancelAnOrder,getOrdersByTown } from "../models/order";
 
 const getPastOrders = (): RHandler => {
   const rHandlerData: RHandler = {
@@ -78,4 +78,20 @@ const cancelOrder = (): RHandler => {
   return rHandlerData;
 };
 
-export { getPastOrders , getPastOrder, orderDeleteFromCart,cancelOrder}
+const ordersByTown = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasToken: false,
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+        ): Promise<ResponseResult> => {
+        return await getOrdersByTown(req.body.town);
+      },
+    ],
+  };
+  return rHandlerData;
+};
+
+export { getPastOrders , getPastOrder, orderDeleteFromCart,cancelOrder, ordersByTown}
