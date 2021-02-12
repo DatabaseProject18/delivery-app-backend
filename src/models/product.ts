@@ -1,7 +1,8 @@
 import { where } from "lodash/fp";
 import { queryBuilder } from "../utils/db/database";
+import { ResponseResult } from "../utils/res/responseBuilder";
 
-const SearchProducts = (product_id: number) => {
+const SearchProducts = (product_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["product_name", "product_volume", "unit_price","product_description", "discount"],
         from: "product",
@@ -10,7 +11,7 @@ const SearchProducts = (product_id: number) => {
     });
 }
 
-const SearchFilterProducts = (category_id: number) => {
+const SearchFilterProducts = (category_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["product_name", "product_volume", "unit_price","product_description", "discount"],
         from: "product",
