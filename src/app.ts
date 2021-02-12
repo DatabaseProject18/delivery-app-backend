@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 //import homeRouter from "./routes/home";
 import orderRouter from "./routes/order";
+import productRouter from "./routes/product";
 import truckRouteRouter from './routes/truckRoute';
 import driverRouter from './routes/driver';
 import driverAssistantRouter from './routes/driverAssistant';
@@ -17,6 +18,8 @@ app.use("/api/truck", truckRouteRouter);
 app.use("/api/",driverRouter);
 app.use("/api/",driverAssistantRouter);
 app.use("/api/",userRouter);
+
+app.use("/api/product", productRouter);
 
 const port = process.env.PORT || 3005;
 
