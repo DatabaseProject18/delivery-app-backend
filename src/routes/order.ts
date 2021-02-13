@@ -10,4 +10,8 @@ router.patch('/NewOrders', handleRequest("deliveryManager","getNewOrders"));
 router.patch('/NewOrders/:order_id', handleRequest("deliveryManager","getNewOrder"));
 router.patch('/RejectOrder/:order_id', handleRequest("deliveryManager","rejectOrder"));
 router.patch('/ShipOrder/:order_id', handleRequest("deliveryManager","shipOrder"));
+router.get('/OrderStatus/:order_id', handleRequest("order", "getOrderStatus"));
+router.get('/OrdersByTown', handleRequest("order", "ordersByTown"));
+router.get('/CreateOrder', handleRequest("order", "createOrder"));
+
 export default router;
