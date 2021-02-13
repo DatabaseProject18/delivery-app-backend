@@ -298,7 +298,7 @@ CREATE TABLE truck_schedule(
     truck_schedule_id INT AUTO_INCREMENT PRIMARY KEY,
     truck_route_id INT,
     truck_id INT ,
-    date_time DATETIME  NOT NULL,
+    date_time DATETIME  NOT NULL,2
     store_manager_id INT,
     driver_id INT ,
     driver_assistant_id INT,
