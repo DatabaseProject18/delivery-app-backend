@@ -37,6 +37,39 @@ const CancelAnOrder = (user_id: number, order_id:number) => {
     });
 }
 
+
+const newOrders = () => {
+    return queryBuilder(({
+        select: null,
+        from: "order_table",
+        where:[{columnName: "order_status", comOperator: "=", value: "new"}]
+    }))
+}
+
+const newOrder = (order_id: number) => {
+    return queryBuilder({
+        select: null,
+        from: "order_table",
+        join: {"customer":"customer_id", "ordered_product":"order_id","product":"product_id"},
+        operator:"AND",
+        where:[{columnName:"order_id", comOperator: "=", value: order_id}]
+    })
+}
+
+const rejectAnOrder = (order_id:number) => {
+    return queryBuilder({
+        update: { tableName: 'order_table', values: { "order_status": "rejected" } },
+        where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+
+const shipAnOrder = (order_id:number) => {
+    return queryBuilder({
+        update: { tableName: 'order_table', values: { "order_status": "shipped" } },
+        where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+
 const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["order_status"],
