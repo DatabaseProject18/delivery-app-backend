@@ -100,4 +100,4 @@ const getOrdersByTown = (town: String): Promise<ResponseResult> => {
     })
 }
 
-export { pastOrders, pastOrder, deleteFromCart, CancelAnOrder, orderStatus, CreateAnOrder, getOrdersByTown };
+export { pastOrders, pastOrder, deleteFromCart, CancelAnOrder, orderStatus, CreateAnOrder, getOrdersByTown, newOrders, newOrder, rejectAnOrder, shipAnOrder };
