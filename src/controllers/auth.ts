@@ -164,6 +164,29 @@ export const logout = (): RHandler => {
         data: ResponseResult
       ): Promise<ResponseResult> => {
         //Remove token from the database
+        const result = await queryBuilder({
+          select: null,
+          from: "refresh_token",
+          where: [
+            {
+              columnName: "token",
+              comOperator: "=",
+              value: req.body.refreshToken,
+            },
+          ],
+        });
+
+        if (result.error) {
+          return new Promise((resolve) => {
+            resolve({
+              resCode: 403,
+              error: {
+                single: "Unauthorized Access!",
+              },
+            });
+          });
+        }
+
         return await queryBuilder({
           delete: true,
           from: "refresh_token",
