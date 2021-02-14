@@ -37,4 +37,4 @@ const searchProducts = (): RHandler => {
     return rHandlerData;
   };
 
-  export { searchProducts, SearchFilterProducts }
+  export { searchProducts, searchFilterProducts }
