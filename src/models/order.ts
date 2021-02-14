@@ -2,7 +2,7 @@ import { where } from "lodash/fp";
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const pastOrders = (user_id: number) => {
+const pastOrders = (user_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["order_id", "order_date", "cost","order_status"],
         from: "order_table",
@@ -11,7 +11,7 @@ const pastOrders = (user_id: number) => {
     });
 }
 
-const pastOrder = (user_id: number, order_id:number) => {
+const pastOrder = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         select: null,
         from: "ordered_product",
@@ -21,7 +21,7 @@ const pastOrder = (user_id: number, order_id:number) => {
     });
 }
 
-const deleteFromCart = (user_id: number, order_id:number) => {
+const deleteFromCart = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         update: { tableName: 'order_table', values: { "order_status": "deleted" } },
         operator:"AND",
@@ -29,7 +29,7 @@ const deleteFromCart = (user_id: number, order_id:number) => {
     });
 }
 
-const CancelAnOrder = (user_id: number, order_id:number) => {
+const CancelAnOrder = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         update: { tableName: 'order_table', values: { "order_status": "canceled" } },
         operator:"AND",
@@ -38,7 +38,7 @@ const CancelAnOrder = (user_id: number, order_id:number) => {
 }
 
 
-const newOrders = () => {
+const newOrders = (): Promise<ResponseResult> => {
     return queryBuilder(({
         select: null,
         from: "order_table",
@@ -46,7 +46,7 @@ const newOrders = () => {
     }))
 }
 
-const newOrder = (order_id: number) => {
+const newOrder = (order_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: null,
         from: "order_table",
@@ -56,14 +56,14 @@ const newOrder = (order_id: number) => {
     })
 }
 
-const rejectAnOrder = (order_id:number) => {
+const rejectAnOrder = (order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         update: { tableName: 'order_table', values: { "order_status": "rejected" } },
         where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
     });
 }
 
-const shipAnOrder = (order_id:number) => {
+const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         update: { tableName: 'order_table', values: { "order_status": "shipped" } },
         where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
