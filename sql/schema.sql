@@ -390,6 +390,20 @@ CREATE TABLE admin(
 
 CREATE TABLE refresh_token(
     token VARCHAR(255) PRIMARY KEY
-)
+);
 
+CREATE TABLE cart(
+    customer_id INT,
+    product_id INT,
+    quantity INT CHECK (quantity > 0),
+    FOREIGN KEY (customer_id)
+        REFERENCES customer(customer_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE, 
+    FOREIGN KEY (product_id)
+        REFERENCES product(product_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY(customer_id,product_id)
+)
 -- Dilshan
