@@ -10,7 +10,7 @@ CREATE TABLE customer_type (
 
 -- User Type
 CREATE TABLE user_type(
-    type VARCHAR(50) PRIMARY KEY
+    type VARCHAR(50) PRIMARY KEYb
 );
 
 -- Store
@@ -31,6 +31,8 @@ CREATE TABLE user_data(
     user_type VARCHAR(50),
     FOREIGN KEY (user_type)
         REFERENCES user_type(type)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
 );
 
 -- Customer Table
@@ -96,9 +98,9 @@ CREATE TABLE order_table(
         ON DELETE CASCADE,
     FOREIGN KEY (order_status) 
         REFERENCES order_status(order_status)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
 );
-
--- Kasun
 
 -- Payment Method Table
 CREATE TABLE payment_method(
@@ -194,8 +196,6 @@ CREATE TABLE train_time_table(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-
--- thushan
 
 -- Staff
 CREATE TABLE staff(
@@ -342,8 +342,6 @@ CREATE TABLE scheduled_order (
     PRIMARY KEY (order_id,truck_schedule_id)
 );
 
--- Dushan
-
 -- User Account
 CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
@@ -388,10 +386,12 @@ CREATE TABLE admin(
         ON DELETE CASCADE 
 );
 
+-- Rferesh token store
 CREATE TABLE refresh_token(
     token VARCHAR(255) PRIMARY KEY
 );
 
+-- Order cart
 CREATE TABLE cart(
     customer_id INT,
     product_id INT,
@@ -405,5 +405,4 @@ CREATE TABLE cart(
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     PRIMARY KEY(customer_id,product_id)
-)
--- Dilshan
+);
