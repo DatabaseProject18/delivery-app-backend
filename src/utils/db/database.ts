@@ -173,7 +173,7 @@ const resultGenrator = (
 ): ResponseResult => {
   let responseResult: ResponseResult = {};
   if (error) {
-    console.log(error);
+    //console.log(error);
     const errorDetails: ErrorDetail = getErrorDetails(error.code);
     responseResult.resCode = errorDetails.resCode;
     _.set(responseResult, "error.single", errorDetails.msg);

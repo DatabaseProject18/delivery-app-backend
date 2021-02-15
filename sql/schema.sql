@@ -141,6 +141,7 @@ CREATE TABLE product
     unit_price DECIMAL(7,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
+    stock INT CHECK (stock >= 0),
     FOREIGN KEY (category_id)
         REFERENCES product_category(category_id)
         ON UPDATE CASCADE
@@ -385,6 +386,23 @@ CREATE TABLE admin(
         ON DELETE CASCADE 
 );
 
+-- Rferesh token store
 CREATE TABLE refresh_token(
     token VARCHAR(255) PRIMARY KEY
-)
+);
+
+-- Order cart
+CREATE TABLE cart(
+    customer_id INT,
+    product_id INT,
+    quantity INT CHECK (quantity > 0),
+    FOREIGN KEY (customer_id)
+        REFERENCES customer(customer_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE, 
+    FOREIGN KEY (product_id)
+        REFERENCES product(product_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY(customer_id,product_id)
+);

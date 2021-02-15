@@ -6,7 +6,7 @@ import { getDriverId, getDriverName, getDriverIds, getDriverDetails, getDriverFu
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasToken: false
       },
       handlers: [
         (req: Request, res: Response) => async (
