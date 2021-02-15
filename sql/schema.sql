@@ -10,7 +10,7 @@ CREATE TABLE customer_type (
 
 -- User Type
 CREATE TABLE user_type(
-    type VARCHAR(50) PRIMARY KEY
+    type VARCHAR(50) PRIMARY KEYb
 );
 
 -- Store
