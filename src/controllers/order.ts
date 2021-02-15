@@ -3,7 +3,7 @@ import Joi from "joi";
 import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { pastOrders, pastOrder,deleteFromCart,CancelAnOrder,getOrdersByTown } from "../models/order";
+import { pastOrders, pastOrder,deleteFromCart,CancelAnOrder, orderStatus, getOrdersByTown, CreateAnOrder } from "../models/order";
 
 const getPastOrders = (): RHandler => {
   const rHandlerData: RHandler = {
@@ -78,7 +78,7 @@ const cancelOrder = (): RHandler => {
   return rHandlerData;
 };
 
-const ordersByTown = (): RHandler => {
+const getOrderStatus = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasToken: false,
@@ -87,11 +87,46 @@ const ordersByTown = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-        return await getOrdersByTown(req.body.town);
+            const customer_id = 1000; // this should be changed
+        return await orderStatus(customer_id,+req.params.order_id);
       },
     ],
   };
   return rHandlerData;
 };
 
-export { getPastOrders , getPastOrder, orderDeleteFromCart,cancelOrder, ordersByTown}
+const ordersByTown = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        hasToken: false,
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+          ): Promise<ResponseResult> => {
+          return await getOrdersByTown(req.body.town);
+        },
+      ],
+    };
+    return rHandlerData;
+  };
+
+const createOrder = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasToken: false,
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+        ): Promise<ResponseResult> => {
+            const customer_id = 1000; // this should be changed
+        console.log("Order successfully created")
+        return await CreateAnOrder(customer_id);
+      },
+    ],
+  };
+  return rHandlerData;
+};
+
+export { getPastOrders, getPastOrder, orderDeleteFromCart, cancelOrder, getOrderStatus, ordersByTown, createOrder }
