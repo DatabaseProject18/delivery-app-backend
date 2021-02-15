@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import Joi from "joi";
+import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getUserDetails, getUserFullDetails} from '../models/user';
+import { SearchProducts, SearchFilterProducts } from "../models/product";
 
-  const userDetails = (): RHandler => {
+const searchProducts = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasToken: false,
@@ -12,14 +14,14 @@ import { getUserDetails, getUserFullDetails} from '../models/user';
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getUserDetails();
+          return await SearchProducts(+req.params.product_id);
         },
       ],
     };
     return rHandlerData;
   };
-
-  const userFullDetails = (): RHandler => {
+  
+  const searchFilterProducts = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasToken: false,
@@ -28,14 +30,11 @@ import { getUserDetails, getUserFullDetails} from '../models/user';
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getUserFullDetails(+req.params.user_id);
+          return await SearchFilterProducts(+req.params.category_id);
         },
       ],
     };
     return rHandlerData;
   };
 
-  
-  
-
-export { userDetails, userFullDetails }
+  export { searchProducts, SearchFilterProducts }
