@@ -405,5 +405,5 @@ CREATE TABLE cart(
     FOREIGN KEY (product_id)
         REFERENCES product(product_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 );
