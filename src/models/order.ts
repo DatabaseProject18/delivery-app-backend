@@ -1,10 +1,10 @@
 import { where } from "lodash/fp";
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder,call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
 const pastOrders = (user_id: number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: ["order_id", "order_date", "cost","order_status"],
+        select: ["order_id", "order_date","delivery_date", "cost","order_status"],
         from: "order_table",
         operator:"AND",
         where: [{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_status", comOperator: "!=", value: "deleted" }]
@@ -13,7 +13,7 @@ const pastOrders = (user_id: number): Promise<ResponseResult> => {
 
 const pastOrder = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: null,
+        select: ["order_id","order_status","cost","order_date","delivery_date","product_name","item_price","quantity","product_description"],
         from: "ordered_product",
         join: { "product": "product_id", "order_table": "order_id" },
         operator:"AND",
@@ -21,17 +21,11 @@ const pastOrder = (user_id: number, order_id:number): Promise<ResponseResult> =>
     });
 }
 
-const deleteFromCart = (user_id: number, order_id:number): Promise<ResponseResult> => {
-    return queryBuilder({
-        update: { tableName: 'order_table', values: { "order_status": "deleted" } },
-        operator:"AND",
-        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
-    });
-}
+
 
 const CancelAnOrder = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
-        update: { tableName: 'order_table', values: { "order_status": "canceled" } },
+        update: { tableName: 'order_table', values: { "order_status": "Canceled" } },
         operator:"AND",
         where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
     });
@@ -100,4 +94,4 @@ const getOrdersByTown = (town: String): Promise<ResponseResult> => {
     })
 }
 
-export { pastOrders, pastOrder, deleteFromCart, CancelAnOrder, orderStatus, CreateAnOrder, getOrdersByTown, newOrders, newOrder, rejectAnOrder, shipAnOrder };
+export { pastOrders, pastOrder, CancelAnOrder, orderStatus, CreateAnOrder, getOrdersByTown, newOrders, newOrder, rejectAnOrder, shipAnOrder };
