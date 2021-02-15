@@ -10,9 +10,19 @@ import driverRouter from './routes/driver';
 import driverAssistantRouter from './routes/driverAssistant';
 import userRouter from './routes/user';
 import deliveryManagerRouter from './routes/deliveryManager'
+import cart from './routes/cart'
 
-app.use(express.json());
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" 
+  );
+  res.header("Access-Control-Allow-Headers", "content-type");
+  next();
+});
 
 app.use("/api", authRouter);
 app.use("/api/order", orderRouter);
@@ -21,7 +31,8 @@ app.use("/api/",driverRouter);
 app.use("/api/",driverAssistantRouter);
 app.use("/api/",userRouter);
 app.use("/api/product", productRouter);
-app.use("/api/deliveryManager",deliveryManagerRouter);
+app.use("/api/deliveryManager", deliveryManagerRouter);
+app.use("/api/cart",cart);
 
 const port = process.env.PORT || 3005;
 
