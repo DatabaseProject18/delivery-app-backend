@@ -393,9 +393,11 @@ CREATE TABLE refresh_token(
 
 -- Order cart
 CREATE TABLE cart(
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     product_id INT,
     quantity INT CHECK (quantity > 0),
+    is_delete BOOLEAN DEFAULT fales,
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -404,5 +406,4 @@ CREATE TABLE cart(
         REFERENCES product(product_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    PRIMARY KEY(customer_id,product_id)
 );
