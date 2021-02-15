@@ -6,7 +6,8 @@ import { getUserDetails, getUserFullDetails} from '../models/user';
   const userDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -22,7 +23,8 @@ import { getUserDetails, getUserFullDetails} from '../models/user';
   const userFullDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
