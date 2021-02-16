@@ -5,27 +5,27 @@ import { ResponseResult } from "../utils/res/responseBuilder";
 
 const cart = (user_id: number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: ["product_id","product_name","product_description","quantity","unit_price","discount","stock"],
+        select: ["cart_id","product_id","product_name","product_description","quantity","unit_price","discount","stock"],
         from: "cart",
         join: { "product": "product_id" },
         operator:"AND",
-        where:[{ columnName: "customer_id", comOperator: "=", value: user_id }]
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{columnName:"is_delete",comOperator:"=",value:0}]
     });
 }
 
-const updateCartQuantity = (user_id: number, product_id: number, quantity:string): Promise<ResponseResult> => {
+const updateCartQuantity = (user_id: number, cart_id: number, quantity:string): Promise<ResponseResult> => {
     return queryBuilder({
         update: { tableName: 'cart', values: { "quantity": String(quantity) } },
         operator:"AND",
-        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "product_id", comOperator: "=", value: product_id }]
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "cart_id", comOperator: "=", value: cart_id }]
     });
 }
 
-const deleteFromCart = (user_id: number, order_id:number): Promise<ResponseResult> => {
+const deleteFromCart = (user_id: number, cart_id:number): Promise<ResponseResult> => {
     return queryBuilder({
-        update: { tableName: 'order_table', values: { "order_status": "deleted" } },
+        update: { tableName: 'cart', values: { "is_delete": String(1) } },
         operator:"AND",
-        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "cart_id", comOperator: "=", value: cart_id }]
     });
 }
 

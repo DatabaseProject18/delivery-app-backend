@@ -3,7 +3,7 @@ import handleRequest from "../utils/req/requestHandler";
 const router = express.Router();
 
 router.get('/', handleRequest("cart", "getCart"));
-router.patch('/cartQuantity/:product_id', handleRequest("cart", "setCartQuntity"));
-router.patch('/orderDeleteFromCart/:order_id', handleRequest("cart", "orderDeleteFromCart"));
+router.patch('/cartQuantity', handleRequest("cart", "setCartQuntity"));
+router.patch('/productDeleteFromCart', handleRequest("cart", "productDeleteFromCart"));
 
 export default router;
