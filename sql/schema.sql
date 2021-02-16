@@ -10,7 +10,7 @@ CREATE TABLE customer_type (
 
 -- User Type
 CREATE TABLE user_type(
-    type VARCHAR(50) PRIMARY KEY
+    type VARCHAR(50) PRIMARY KEYb
 );
 
 -- Store
@@ -27,11 +27,12 @@ CREATE TABLE user_data(
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     address VARCHAR(255) NOT NULL,
-    birth_date DATE,
     registered_date DATE NOT NULL,
     user_type VARCHAR(50),
     FOREIGN KEY (user_type)
         REFERENCES user_type(type)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
 );
 
 -- Customer Table
@@ -40,8 +41,11 @@ CREATE TABLE customer(
     user_id INT,
     type VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id)
-
         REFERENCES user_data(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (type)
+        REFERENCES customer_type(type)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -94,9 +98,9 @@ CREATE TABLE order_table(
         ON DELETE CASCADE,
     FOREIGN KEY (order_status) 
         REFERENCES order_status(order_status)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
 );
-
--- Kasun
 
 -- Payment Method Table
 CREATE TABLE payment_method(
@@ -137,6 +141,7 @@ CREATE TABLE product
     unit_price DECIMAL(7,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
+    stock INT CHECK (stock >= 0),
     FOREIGN KEY (category_id)
         REFERENCES product_category(category_id)
         ON UPDATE CASCADE
@@ -191,8 +196,6 @@ CREATE TABLE train_time_table(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-
--- thushan
 
 -- Staff
 CREATE TABLE staff(
@@ -339,13 +342,11 @@ CREATE TABLE scheduled_order (
     PRIMARY KEY (order_id,truck_schedule_id)
 );
 
--- Dushan
-
 -- User Account
 CREATE TABLE user_account(
     user_id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
     status BOOLEAN DEFAULT true,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
@@ -356,12 +357,11 @@ CREATE TABLE user_account(
 -- User Contact Number
 CREATE TABLE user_contact_number(
     user_id INT,
-    contact_no VARCHAR(20) NOT NULL,
+    contact_no VARCHAR(20) PRIMARY KEY,
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY(user_id,contact_no)
+        ON DELETE CASCADE
 );
 
 
@@ -386,8 +386,24 @@ CREATE TABLE admin(
         ON DELETE CASCADE 
 );
 
+-- Rferesh token store
 CREATE TABLE refresh_token(
     token VARCHAR(255) PRIMARY KEY
-)
+);
 
--- Dilshan
+-- Order cart
+CREATE TABLE cart(
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    product_id INT,
+    quantity INT CHECK (quantity > 0),
+    is_delete BOOLEAN DEFAULT fales,
+    FOREIGN KEY (customer_id)
+        REFERENCES customer(customer_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE, 
+    FOREIGN KEY (product_id)
+        REFERENCES product(product_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
