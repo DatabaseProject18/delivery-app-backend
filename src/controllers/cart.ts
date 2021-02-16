@@ -36,7 +36,7 @@ const setCartQuntity = (): RHandler => {
             const customer_id = 1000; // this should be changed
             //console.log(req.body.quantity)
             //console.log(req.params.product_id)
-        return await updateCartQuantity(customer_id ,+req.params.product_id,req.body.quantity);
+        return await updateCartQuantity(customer_id ,+req.body.cart_id,req.body.quantity);
       },
     ],
   };
@@ -44,7 +44,7 @@ const setCartQuntity = (): RHandler => {
 };
 
 
-const orderDeleteFromCart = (): RHandler => {
+const productDeleteFromCart = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasToken: false,
@@ -55,12 +55,12 @@ const orderDeleteFromCart = (): RHandler => {
         ): Promise<ResponseResult> => {
             const customer_id = 1000; // this should be changed
         //console.log(+req.params.order_id)
-        //console.log(await deleteFromCart(customer_id,+req.params.order_id))
-        return await deleteFromCart(customer_id,+req.params.order_id);
+        //console.log(req.body.cart_id)
+        return await deleteFromCart(customer_id,req.body.cart_id);
       },
     ],
   };
   return rHandlerData;
 };
 
-export {getCart, setCartQuntity,orderDeleteFromCart}
+export {getCart, setCartQuntity,productDeleteFromCart}
