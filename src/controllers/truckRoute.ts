@@ -8,7 +8,8 @@ import {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip} from '../
 const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -29,7 +30,8 @@ const truckRoutes = (): RHandler => {
   const truckId = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -45,7 +47,8 @@ const truckRoutes = (): RHandler => {
   const truckTrip = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       validateSchema: {
         body: {

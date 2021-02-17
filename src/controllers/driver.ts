@@ -6,7 +6,8 @@ import { getDriverId, getDriverName, getDriverIds, getDriverDetails, getDriverFu
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -27,7 +28,8 @@ const driverName = (): RHandler => {
   const driverDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -48,7 +50,8 @@ const driverName = (): RHandler => {
   const driverFullDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (

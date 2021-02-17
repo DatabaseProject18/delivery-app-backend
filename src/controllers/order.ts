@@ -81,7 +81,8 @@ const getOrderStatus = (): RHandler => {
 const ordersByTown = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
