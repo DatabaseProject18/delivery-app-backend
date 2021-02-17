@@ -39,7 +39,7 @@ const getTruckTripDetails = (): RHandler => {
         data: ResponseResult
         ): Promise<ResponseResult> => {
             //console.log(req.query.truckTrip_id);
-            return await truckTripDetails(+req.query.truckTrip_id);
+            return await truckTripDetails(+req.params.truckTrip_id);
       },
     ],
   };
