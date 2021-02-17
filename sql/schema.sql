@@ -79,6 +79,18 @@ CREATE TABLE order_status(
     order_status VARCHAR(10) PRIMARY KEY
 );
 
+-- Covered Area
+CREATE TABLE covered_area(
+    truck_route_id INT,
+    town VARCHAR(20) NOT NULL,
+    meet_position INT NOT NULL,
+    FOREIGN KEY (truck_route_id)
+        REFERENCES truck_route(truck_route_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY (truck_route_id,town)
+);
+
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,8 +98,9 @@ CREATE TABLE order_table(
     delivery_date DATE NOT NULL,
     customer_id INT,
     route_id INT,
+    meet_position INT,
     cost DECIMAL(12, 2) NOT NULL, 
-    order_status VARCHAR(10) DEFAULT "cart",
+    order_status VARCHAR(10) DEFAULT "Preparing"
     FOREIGN KEY (customer_id) 
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -98,6 +111,10 @@ CREATE TABLE order_table(
         ON DELETE CASCADE,
     FOREIGN KEY (order_status) 
         REFERENCES order_status(order_status)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (meet_position) 
+        REFERENCES covered_area(meet_position)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -237,17 +254,7 @@ CREATE TABLE train_schedule(
         ON DELETE CASCADE
 );
 
--- Covered Area
-CREATE TABLE covered_area(
-    truck_route_id INT,
-    town VARCHAR(20) NOT NULL,
-    meet_position INT NOT NULL,
-    FOREIGN KEY (truck_route_id)
-        REFERENCES truck_route(truck_route_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY (truck_route_id,town)
-);
+
 
 -- Store Manager
 CREATE TABLE store_manager(
