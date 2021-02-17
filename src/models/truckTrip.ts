@@ -19,5 +19,14 @@ const sheduledTruckTrips = (id: number, type: string, date: string,isPast:string
     })
 }
 
+const truckTripDetails = (truckTrip_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: null,
+        from: "order_delivery_details",
+        where:[{columnName:"truck_schedule_id", comOperator:"=", value:truckTrip_id}]
+    })
+}
 
-export { sheduledTruckTrips };
+
+
+export { sheduledTruckTrips ,truckTripDetails};
