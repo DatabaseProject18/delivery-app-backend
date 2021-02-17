@@ -9,8 +9,9 @@ import truckRouteRouter from './routes/truckRoute';
 import driverRouter from './routes/driver';
 import driverAssistantRouter from './routes/driverAssistant';
 import userRouter from './routes/user';
-import deliveryManagerRouter from './routes/deliveryManager'
-import cart from './routes/cart'
+import deliveryManagerRouter from './routes/deliveryManager';
+import cart from './routes/cart';
+import truckTrip from './routes/truckTrip';
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -32,7 +33,8 @@ app.use("/api/driverAssistant",driverAssistantRouter);
 app.use("/api/user",userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/deliveryManager", deliveryManagerRouter);
-app.use("/api/cart",cart);
+app.use("/api/cart", cart);
+app.use("/api/truckTrip",truckTrip);
 
 
 const port = process.env.PORT || 3005;
