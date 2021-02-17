@@ -14,7 +14,7 @@ const getSheduledTruckTrips = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            console.log(req.query);
+            //console.log(req.query);
             let id;
             if (req.query.type === "driver") {
                 id = req.query.driver_id; // this should be changed
