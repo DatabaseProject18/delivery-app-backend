@@ -14,7 +14,7 @@ const getSheduledTruckTrips = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            //console.log(req.query);
+            console.log(req.query);
             let id;
             if (req.query.type === "driver") {
                 id = req.query.driver_id; // this should be changed
@@ -22,7 +22,7 @@ const getSheduledTruckTrips = (): RHandler => {
             else if (req.query.type === "driver_assistant") {
                  id = req.query.driver_assistant_id; // this should be changed
             }
-            return await sheduledTruckTrips(id,String(req.query.type) ,String( req.query.date));
+            return await sheduledTruckTrips(id,String(req.query.type) ,String( req.query.date), String(req.query.isPast));
       },
     ],
   };
