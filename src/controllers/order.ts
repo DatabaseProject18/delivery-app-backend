@@ -14,7 +14,7 @@ const getPastOrders = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
+            const customer_id = 1; // this should be changed
         return await pastOrders(customer_id);
       },
     ],
@@ -31,7 +31,7 @@ const getPastOrder = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
+            const customer_id = 1; // this should be changed
             //console.log(req.params.order_id)
         return await pastOrder(customer_id,+req.params.order_id);
       },
@@ -51,7 +51,7 @@ const cancelOrder = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
+            const customer_id = 1; // this should be changed
         console.log(+req.params.order_id)
         //console.log(await deleteFromCart(customer_id,+req.params.order_id))
         return await CancelAnOrder(customer_id,+req.params.order_id);
