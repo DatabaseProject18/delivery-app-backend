@@ -38,3 +38,24 @@ JOIN truck
 JOIN truck_route tr
 	USING(truck_route_id);
 
+
+-- order_delivery_details
+
+DROP VIEW IF EXISTS order_delivery_details;
+CREATE VIEW order_delivery_details AS
+SELECT 
+	truck_schedule_id,
+	o.order_id,
+    CONCAT(first_name , " " , last_name) AS customer_name,
+    address,
+    (SELECT GROUP_CONCAT(contact_no SEPARATOR ', ') FROM user_contact_number ucn WHERE ucn.user_id = u.user_id) AS contact_no,
+    meet_position,
+    order_status
+FROM order_table o
+JOIN scheduled_order
+	USING(order_id)
+JOIN customer
+	USING(customer_id)
+JOIN user_data u
+	USING(user_id)
+WHERE order_status NOT IN ('Preparing', 'Canceled');
