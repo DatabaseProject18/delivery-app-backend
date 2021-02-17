@@ -7,7 +7,7 @@ const sheduledTruckTrips = (id: number, type: string, date: string,isPast:string
     type === 'driver' ? name = 'driver_assistant_name' : name = 'driver_name';
 
     let dateOp;
-    isPast === '1' ? dateOp = "<" : dateOp = ">=";
+    isPast === 'true' ? dateOp = "<" : dateOp = ">=";
 
     //console.log(isPast)
 
