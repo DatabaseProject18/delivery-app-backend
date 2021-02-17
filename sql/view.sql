@@ -2,8 +2,6 @@ DROP VIEW IF EXISTS truck_schedule_details;
 CREATE VIEW  truck_schedule_details AS
 SELECT 
 	truck_schedule_id,
-	s.user_id  driver_user_id,
-    ss.user_id driver_assistant_user_id,
     driver_id,
     driver_assistant_id,
     date_time,
