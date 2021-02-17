@@ -10,7 +10,7 @@ CREATE TABLE customer_type (
 
 -- User Type
 CREATE TABLE user_type(
-    type VARCHAR(50) PRIMARY KEYb
+    type VARCHAR(50) PRIMARY KEY
 );
 
 -- Store
@@ -32,7 +32,7 @@ CREATE TABLE user_data(
     FOREIGN KEY (user_type)
         REFERENCES user_type(type)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 );
 
 -- Customer Table
@@ -99,7 +99,7 @@ CREATE TABLE order_table(
     FOREIGN KEY (order_status) 
         REFERENCES order_status(order_status)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 );
 
 -- Payment Method Table
@@ -397,7 +397,7 @@ CREATE TABLE cart(
     customer_id INT,
     product_id INT,
     quantity INT CHECK (quantity > 0),
-    is_delete BOOLEAN DEFAULT fales,
+    is_delete BOOLEAN DEFAULT false,
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
