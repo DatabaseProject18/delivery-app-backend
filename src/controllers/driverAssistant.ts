@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getDriverAssistantId, getDriverAssistantName, getDriverAssistantIds, getDriverAssistantDetails, getDriverAssistantFullDetails} from '../models/driverAssistant';
+import { getDriverAssistantId, getDriverAssistantName, getDriverAssistantDetails, getDriverAssistantFullDetails} from '../models/driverAssistant';
 
 const driverAssistantName = (): RHandler => {
     const rHandlerData: RHandler = {
@@ -35,12 +35,7 @@ const driverAssistantName = (): RHandler => {
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getDriverAssistantIds();
-        },
-        (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverAssistantDetails(data.data.multiple[0].driver_assistant_id);
+          return await getDriverAssistantDetails();
         },
       ],
     };
