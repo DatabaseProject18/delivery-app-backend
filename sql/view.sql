@@ -47,13 +47,15 @@ SELECT
     CONCAT(first_name , " " , last_name) AS customer_name,
     address,
     (SELECT GROUP_CONCAT(contact_no SEPARATOR ', ') FROM user_contact_number ucn WHERE ucn.user_id = u.user_id) AS contact_no,
-    meet_position,
+    town,
     order_status
 FROM order_table o
-JOIN scheduled_order
+JOIN scheduled_order 
 	USING(order_id)
 JOIN customer
 	USING(customer_id)
 JOIN user_data u
 	USING(user_id)
+JOIN covered_area ca
+	ON ca.truck_route_id = o.route_id AND ca.meet_position = o.meet_position
 WHERE order_status NOT IN ('Preparing', 'Canceled');
