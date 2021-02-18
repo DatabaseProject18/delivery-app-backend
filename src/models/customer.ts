@@ -1,4 +1,4 @@
-import { call } from "../utils/db/database";
+import { call, queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
 interface customerData {
@@ -25,4 +25,11 @@ export const insertCustomer = async (
     data.contact_no,
     data.registered_date,
   ]);
+};
+
+export const getAllCustomerTypes = async (): Promise<ResponseResult> => {
+  return await queryBuilder({
+    select: null,
+    from: "customer_type",
+  });
 };
