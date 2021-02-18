@@ -2,16 +2,17 @@ const express = require("express");
 const app = express();
 import cors from "cors";
 import authRouter from "./routes/auth";
-import cart from "./routes/cart";
 import CustomerRouter from "./routes/customer";
 import deliveryManagerRouter from "./routes/deliveryManager";
 import driverRouter from "./routes/driver";
 import driverAssistantRouter from "./routes/driverAssistant";
 import orderRouter from "./routes/order";
 import productRouter from "./routes/product";
-import truckRouteRouter from "./routes/truckRoute";
-import truckTrip from "./routes/truckTrip";
-import userRouter from "./routes/user";
+import truckRouteRouter from './routes/truckRoute';
+import driverRouter from './routes/driver';
+import userRouter from './routes/user';
+import cartRouter from './routes/cart';
+import truckTripRouter from './routes/truckTrip';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,9 +36,9 @@ app.use("/api/driverAssistant", driverAssistantRouter);
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/deliveryManager", deliveryManagerRouter);
-app.use("/api/cart", cart);
-app.use("/api/truckTrip", truckTrip);
 app.use("/api/customer", CustomerRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/truckTrip",truckTripRouter);
 
 const port = process.env.PORT || 3005;
 

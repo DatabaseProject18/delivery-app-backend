@@ -1,6 +1,7 @@
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
+
 const getTruckRouteIds = (store_manager_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["truck_route_id"],
@@ -38,4 +39,13 @@ const createTruckTrip = (req: Object): Promise<ResponseResult> => {
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip};
+const truckRouteByID = (truck_route_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["town"],
+        from: "covered_area",
+        where: [{ columnName: "truck_route_id", comOperator: "=", value: truck_route_id }],
+        order: {["meet_position"]: "ASC"}
+    });
+}
+
+export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID};

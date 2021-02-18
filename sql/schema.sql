@@ -403,7 +403,7 @@ CREATE TABLE cart(
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     product_id INT,
-    quantity INT CHECK (quantity > 0),
+    quantity INT DEFAULT 1 CHECK (quantity > 0),
     is_delete BOOLEAN DEFAULT false,
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)

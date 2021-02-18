@@ -19,6 +19,7 @@
   "homepage": "https://github.com/DatabaseProject18/delivery-app-backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bcrypt-nodejs": "^0.0.3",
     "config": "^3.3.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
