@@ -32,7 +32,8 @@ const truckTripOrderDetails = (truckTrip_id: number): Promise<ResponseResult> =>
     return queryBuilder({
         select: null,
         from: "order_delivery_details",
-        where:[{columnName:"truck_schedule_id", comOperator:"=", value:truckTrip_id}]
+        where: [{ columnName: "truck_schedule_id", comOperator: "=", value: truckTrip_id }],
+        order: {["order_status"]: "DESC",["meet_position"]: "ASC"}
     })
 }
 

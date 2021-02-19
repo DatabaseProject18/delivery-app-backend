@@ -47,7 +47,8 @@ SELECT
     CONCAT(first_name , " " , last_name) AS customer_name,
     address,
     (SELECT GROUP_CONCAT(contact_no SEPARATOR ', ') FROM user_contact_number ucn WHERE ucn.user_id = u.user_id) AS contact_no,
-    town,
+    ca.town,
+	ca.meet_position,
     order_status
 FROM order_table o
 JOIN scheduled_order 
