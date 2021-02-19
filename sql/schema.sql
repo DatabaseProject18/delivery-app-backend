@@ -88,7 +88,7 @@ CREATE TABLE covered_area(
         REFERENCES truck_route(truck_route_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    PRIMARY KEY (truck_route_id,town)
+    PRIMARY KEY (truck_route_id,meet_position)
 );
 
 -- Order Table
@@ -100,7 +100,7 @@ CREATE TABLE order_table(
     route_id INT,
     meet_position INT,
     cost DECIMAL(12, 2) NOT NULL, 
-    order_status VARCHAR(10) DEFAULT "Preparing"
+    order_status VARCHAR(10) DEFAULT "Preparing",
     FOREIGN KEY (customer_id) 
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -111,10 +111,6 @@ CREATE TABLE order_table(
         ON DELETE CASCADE,
     FOREIGN KEY (order_status) 
         REFERENCES order_status(order_status)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (meet_position) 
-        REFERENCES covered_area(meet_position)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -188,11 +184,11 @@ CREATE TABLE truck(
     registration_no VARCHAR(20) NOT NULL,
     truck_capacity DECIMAL(5, 2) NOT NULL,
     store_id INT,
-    FOREIGN KEY (staff_id)
-        REFERENCES store(staff_id)
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-     PRIMARY KEY (truck_id,store_id)
+     PRIMARY KEY (truck_id)
 );
 
 -- Train table
