@@ -154,8 +154,8 @@ CREATE TABLE product
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(100) NOT NULL,
     category_id INT,
-    product_volume DECIMAL(7,2) NOT NULL,
-    unit_price DECIMAL(7,2) NOT NULL,
+    product_volume DECIMAL(8,2) NOT NULL,
+    unit_price DECIMAL(8,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
     stock INT CHECK (stock >= 0),
@@ -184,9 +184,15 @@ CREATE TABLE ordered_product(
 
 -- Truck table
 CREATE TABLE truck(
-    truck_id INT AUTO_INCREMENT PRIMARY KEY,
+    truck_id INT AUTO_INCREMENT,
     registration_no VARCHAR(20) NOT NULL,
-    truck_capacity DECIMAL(5, 2) NOT NULL
+    truck_capacity DECIMAL(5, 2) NOT NULL,
+    store_id INT,
+    FOREIGN KEY (staff_id)
+        REFERENCES store(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+     PRIMARY KEY (truck_id,store_id)
 );
 
 -- Train table
