@@ -41,17 +41,14 @@ const ConfirmAnOrder = (order_id:number): Promise<ResponseResult> => {
 const newOrders = (): Promise<ResponseResult> => {
     return queryBuilder(({
         select: null,
-        from: "order_table",
-        where:[{columnName: "order_status", comOperator: "=", value: "cart"}]
+        from: "new_order_details"
     }))
 }
 
 const newOrder = (order_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: null,
-        from: "order_table",
-        join: {"customer":"customer_id", "ordered_product":"order_id","product":"product_id"},
-        operator:"AND",
+        from: "new_order_details",
         where:[{columnName:"order_id", comOperator: "=", value: order_id}]
     })
 }

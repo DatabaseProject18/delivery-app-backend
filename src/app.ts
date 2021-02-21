@@ -4,7 +4,6 @@ import cors from "cors";
 import authRouter from "./routes/auth";
 import CustomerRouter from "./routes/customer";
 import deliveryManagerRouter from "./routes/deliveryManager";
-import driverRouter from "./routes/driver";
 import driverAssistantRouter from "./routes/driverAssistant";
 import orderRouter from "./routes/order";
 import productRouter from "./routes/product";
