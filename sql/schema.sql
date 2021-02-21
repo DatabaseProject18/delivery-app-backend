@@ -94,9 +94,9 @@ CREATE TABLE covered_area(
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
     order_date DATE NOT NULL,
     delivery_date DATE NOT NULL,
-    customer_id INT,
     route_id INT,
     meet_position INT,
     cost DECIMAL(12, 2) NOT NULL, 
@@ -125,8 +125,8 @@ CREATE TABLE payment_method(
 CREATE TABLE payment(
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
-    payment_method VARCHAR(50),
     amount DECIMAL(12,2),
+    payment_method VARCHAR(50),
     payment_date DATE,
     FOREIGN KEY (order_id) 
         REFERENCES order_table(order_id)
@@ -148,10 +148,10 @@ CREATE TABLE product_category(
 CREATE TABLE product
 (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(100) NOT NULL,
+    product_name VARCHAR(1000) NOT NULL,
     category_id INT,
     product_volume DECIMAL(8,2) NOT NULL,
-    unit_price DECIMAL(8,2) NOT NULL,
+    unit_price DECIMAL(9,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
     stock INT CHECK (stock >= 0),
@@ -166,7 +166,7 @@ CREATE TABLE ordered_product(
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity DECIMAL(7,2) NOT NULL,
-    item_price DECIMAL(7,2) NOT NULL,
+    item_price DECIMAL(9,2) NOT NULL,
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
@@ -403,8 +403,8 @@ CREATE TABLE refresh_token(
 -- Order cart
 CREATE TABLE cart(
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
     product_id INT,
+    customer_id INT,
     quantity INT DEFAULT 1 CHECK (quantity > 0),
     is_delete BOOLEAN DEFAULT false,
     FOREIGN KEY (customer_id)
