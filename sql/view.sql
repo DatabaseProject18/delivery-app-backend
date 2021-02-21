@@ -37,6 +37,7 @@ JOIN truck_route tr
 	USING(truck_route_id);
 
 
+DROP VIEW IF EXISTS new_order_details;
 CREATE VIEW  new_order_details AS
 SELECT
         ot.order_id,
@@ -53,7 +54,8 @@ truck_route tr,
 train_route tar,
 ordered_product op,
 product p
-WHERE ot.route_id = tr.truck_route_id AND
+WHERE ot.order_status = 'cart' AND
+ot.route_id = tr.truck_route_id AND
 tr.train_route_id = tar.train_route_id AND
 tar.store_id = s.store_id AND
 ot.order_id = op.order_id AND
