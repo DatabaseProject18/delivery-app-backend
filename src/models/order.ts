@@ -42,7 +42,7 @@ const newOrders = (): Promise<ResponseResult> => {
     return queryBuilder(({
         select: null,
         from: "order_table",
-        where:[{columnName: "order_status", comOperator: "=", value: "new"}]
+        where:[{columnName: "order_status", comOperator: "=", value: "cart"}]
     }))
 }
 
