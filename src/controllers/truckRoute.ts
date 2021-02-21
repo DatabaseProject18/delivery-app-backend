@@ -54,7 +54,7 @@ const truckRoutes = (): RHandler => {
         body: {
           truck_route_id: Joi.number().min(1).required(),
           truck_id: Joi.number().min(1).required(),
-          date_time: Joi.date().required(),
+          date_time: Joi.date().iso().required(),
           store_manager_id: Joi.number().min(1).required(),
           driver_id: Joi.number().min(1).required(),
           driver_assistant_id: Joi.number().min(1).required(),
