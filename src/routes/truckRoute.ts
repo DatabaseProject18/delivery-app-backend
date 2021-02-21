@@ -7,6 +7,7 @@ router.get('/scheduledOrders', handleRequest("order","ordersByTown"));
 router.get('/', handleRequest('truckRoute','truckId'));
 router.get('/driver/:truck_id', handleRequest('driver','driverName'));
 router.get('/driverAssistant/:truck_id', handleRequest('driverAssistant','driverAssistantName'));
-router.post('/newTruckTrip', handleRequest("truckRoute","truckTrip"));
+router.post('/newTruckTrip', handleRequest("truckRoute", "truckTrip"));
+router.get('/truckRoute/:truck_schedule_id',handleRequest("truckRoute","getTruckRouteByID"));
 
 export default router;

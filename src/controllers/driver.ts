@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getDriverId, getDriverName, getDriverIds, getDriverDetails, getDriverFullDetails} from '../models/driver';
+import { getDriverId, getDriverName, getDriverDetails, getDriverFullDetails} from '../models/driver';
 
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -27,18 +28,14 @@ const driverName = (): RHandler => {
   const driverDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getDriverIds();
-        },
-        (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverDetails(data.data.multiple[0].driver_id);
+          return await getDriverDetails();
         },
       ],
     };
@@ -48,7 +45,8 @@ const driverName = (): RHandler => {
   const driverFullDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (

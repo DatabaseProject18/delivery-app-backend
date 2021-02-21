@@ -9,7 +9,7 @@ import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
 import {
   generateAccessToken,
-  generateRefreshToken,
+  generateRefreshToken
 } from "../utils/token/tokenManager";
 
 export const login = (): RHandler => {

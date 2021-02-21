@@ -2,13 +2,11 @@ DROP VIEW IF EXISTS truck_schedule_details;
 CREATE VIEW  truck_schedule_details AS
 SELECT 
 	truck_schedule_id,
-	s.user_id  driver_user_id,
-    ss.user_id driver_assistant_user_id,
     driver_id,
     driver_assistant_id,
     date_time,
-    concat(u_dr.first_name, ' ', u_dr.last_name) drver_name,
-    concat(u_ds.first_name, ' ' , u_ds.last_name)drver_assistant_name,
+    concat(u_dr.first_name, ' ', u_dr.last_name) driver_name,
+    concat(u_ds.first_name, ' ' , u_ds.last_name) driver_assistant_name,
     registration_no truck_number,
     distance,
     average_time,
@@ -60,3 +58,28 @@ tr.train_route_id = tar.train_route_id AND
 tar.store_id = s.store_id AND
 ot.order_id = op.order_id AND
 op.product_id = p.product_id;
+
+-- order_delivery_details
+
+DROP VIEW IF EXISTS order_delivery_details;
+CREATE VIEW order_delivery_details AS
+SELECT 
+	truck_schedule_id,
+	o.order_id,
+    CONCAT(first_name , " " , last_name) AS customer_name,
+    address,
+    (SELECT GROUP_CONCAT(contact_no SEPARATOR ', ') FROM user_contact_number ucn WHERE ucn.user_id = u.user_id) AS contact_no,
+    ca.town,
+	ca.meet_position,
+    order_status
+FROM order_table o
+JOIN scheduled_order 
+	USING(order_id)
+JOIN customer
+	USING(customer_id)
+JOIN user_data u
+	USING(user_id)
+JOIN covered_area ca
+	ON ca.truck_route_id = o.route_id AND ca.meet_position = o.meet_position
+WHERE order_status NOT IN ('Preparing', 'Canceled');
+

@@ -67,7 +67,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => (
     if (authSchema.hasRefreshToken) {
       if (!req.body.refreshToken) {
         response.resCode = 401;
-        _.set(response, "error.single", "Authorization token is not provided");
+        _.set(response, "error.single", "Refresh token is not provided");
         responseBulider(res)(response);
         return;
       }
@@ -79,7 +79,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => (
 
       if (!payload) {
         response.resCode = 403;
-        _.set(response, "error.single", "Authorization token is invalid");
+        _.set(response, "error.single", "Refresh token is invalid");
         responseBulider(res)(response);
         return;
       }

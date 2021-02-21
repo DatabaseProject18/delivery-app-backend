@@ -79,6 +79,18 @@ CREATE TABLE order_status(
     order_status VARCHAR(10) PRIMARY KEY
 );
 
+-- Covered Area
+CREATE TABLE covered_area(
+    truck_route_id INT,
+    town VARCHAR(20) NOT NULL,
+    meet_position INT NOT NULL,
+    FOREIGN KEY (truck_route_id)
+        REFERENCES truck_route(truck_route_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY (truck_route_id,meet_position)
+);
+
 -- Order Table
 CREATE TABLE order_table(
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,8 +98,9 @@ CREATE TABLE order_table(
     delivery_date DATE NOT NULL,
     customer_id INT,
     route_id INT,
+    meet_position INT,
     cost DECIMAL(12, 2) NOT NULL, 
-    order_status VARCHAR(10) DEFAULT "cart",
+    order_status VARCHAR(10) DEFAULT "Preparing",
     FOREIGN KEY (customer_id) 
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
@@ -137,8 +150,8 @@ CREATE TABLE product
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(100) NOT NULL,
     category_id INT,
-    product_volume DECIMAL(7,2) NOT NULL,
-    unit_price DECIMAL(7,2) NOT NULL,
+    product_volume DECIMAL(8,2) NOT NULL,
+    unit_price DECIMAL(8,2) NOT NULL,
     product_description VARCHAR(255),
     discount DECIMAL(4,2),
     stock INT CHECK (stock >= 0),
@@ -167,9 +180,15 @@ CREATE TABLE ordered_product(
 
 -- Truck table
 CREATE TABLE truck(
-    truck_id INT AUTO_INCREMENT PRIMARY KEY,
+    truck_id INT AUTO_INCREMENT,
     registration_no VARCHAR(20) NOT NULL,
-    truck_capacity DECIMAL(5, 2) NOT NULL
+    truck_capacity DECIMAL(5, 2) NOT NULL,
+    store_id INT,
+    FOREIGN KEY (store_id)
+        REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+     PRIMARY KEY (truck_id)
 );
 
 -- Train table
@@ -237,17 +256,7 @@ CREATE TABLE train_schedule(
         ON DELETE CASCADE
 );
 
--- Covered Area
-CREATE TABLE covered_area(
-    truck_route_id INT,
-    town VARCHAR(20) NOT NULL,
-    meet_position INT NOT NULL,
-    FOREIGN KEY (truck_route_id)
-        REFERENCES truck_route(truck_route_id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    PRIMARY KEY (truck_route_id,town)
-);
+
 
 -- Store Manager
 CREATE TABLE store_manager(
@@ -396,7 +405,7 @@ CREATE TABLE cart(
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     product_id INT,
-    quantity INT CHECK (quantity > 0),
+    quantity INT DEFAULT 1 CHECK (quantity > 0),
     is_delete BOOLEAN DEFAULT false,
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
