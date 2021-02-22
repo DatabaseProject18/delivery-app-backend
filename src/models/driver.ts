@@ -6,13 +6,13 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
         select: ["driver_id"],
         from: "truck_schedule",
         operator: "AND",
-        where: [{ columnName: "date_time", comOperator: ">=", value: start_time }, { columnName: "date_time", comOperator: "<=", value: end_time }]   
+        where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }]   
     });
 
     const pastConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: "<", value: start_time }],
+        where: [{ columnName: "date_time", comOperator: "<=", value: start_time }],
         order: {["date_time"]: "DESC"},
         limit: [1] 
     });
@@ -20,7 +20,7 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
     const futureConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: ">", value: end_time }],
+        where: [{ columnName: "date_time", comOperator: ">=", value: end_time }],
         order: {["date_time"]: "ASC"},
         limit: [1] 
     });
@@ -28,7 +28,9 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
     let busyDriverIds = [];
     
     if(presentConsecutiveDrivers.data){
-        busyDriverIds.push(presentConsecutiveDrivers.data.multiple[0]);
+        presentConsecutiveDrivers.data.multiple.forEach(function (value) {
+            busyDriverIds.push(value);
+          });
     }
 
     if(pastConsecutiveDrivers.data){
@@ -46,13 +48,8 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
         where: [{columnName: "user_type", comOperator: "=",value: "Driver"}] 
     }); 
 
-    var freeDriverDetails = allDriverDetails.data.multiple.filter(function(item) {
-        console.log(allDriverDetails.data.multiple);
-        console.log(item.driver_id);
-        console.log(busyDriverIds);
-        return !busyDriverIds.includes(item.driver_id); 
-    })
-    
+    const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));
+
     allDriverDetails.data.multiple = freeDriverDetails;
     return allDriverDetails;    
 }
