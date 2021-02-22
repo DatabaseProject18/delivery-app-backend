@@ -9,15 +9,15 @@ import { cart, updateCartQuantity,deleteFromCart } from "../models/cart";
 const getCart = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
-            //console.log(req.params.order_id)
-        return await cart(customer_id);
+            //const customer_id = 1;
+            //console.log(req.query)
+        return await cart(+req.query.customer_id);
       },
     ],
   };
@@ -27,16 +27,15 @@ const getCart = (): RHandler => {
 const setCartQuntity = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
-            //console.log(req.body.quantity)
-            //console.log(req.params.product_id)
-        return await updateCartQuantity(customer_id ,+req.body.cart_id,req.body.quantity);
+            //const customer_id = 1000; // this should be changed
+        // return await updateCartQuantity(+req.body.customer_id ,+req.body.cart_id,req.body.quantity);
+        return await updateCartQuantity(+req.body.customer_id ,+req.body.cart_id,req.body.quantity);
       },
     ],
   };
@@ -47,16 +46,16 @@ const setCartQuntity = (): RHandler => {
 const productDeleteFromCart = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
         ): Promise<ResponseResult> => {
-            const customer_id = 1000; // this should be changed
+           // const customer_id = 1000; // this should be changed
         //console.log(+req.params.order_id)
         //console.log(req.body.cart_id)
-        return await deleteFromCart(customer_id,req.body.cart_id);
+        return await deleteFromCart(+req.body.cart_id);
       },
     ],
   };

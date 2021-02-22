@@ -23,14 +23,10 @@ JOIN driver dr
 	USING(driver_id)
 JOIN driver_assistant ds
 	USING(driver_assistant_id)
-JOIN staff s
-	ON dr.staff_id = s.staff_id
-JOIN staff ss
-	ON ds.staff_id = ss.staff_id
 JOIN user_data u_dr
-	ON u_dr.user_id = s.user_id
+	ON u_dr.user_id = dr.user_id
 JOIN user_data u_ds
-	ON u_ds.user_id = ss.user_id
+	ON u_ds.user_id = ds.user_id
 JOIN truck
 	USING(truck_id)
 JOIN truck_route tr

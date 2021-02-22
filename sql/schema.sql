@@ -231,8 +231,13 @@ CREATE TABLE staff(
 CREATE TABLE delivery_manager(
     delivery_manager_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
+    user_id INT,
     FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -262,6 +267,7 @@ CREATE TABLE train_schedule(
 CREATE TABLE store_manager(
     store_manager_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
+    user_id INT,
     store_id INT,
     FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
@@ -269,6 +275,10 @@ CREATE TABLE store_manager(
         ON DELETE CASCADE ,
     FOREIGN KEY (store_id)
         REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE 
 );
@@ -277,6 +287,7 @@ CREATE TABLE store_manager(
 CREATE TABLE driver_assistant(
     driver_assistant_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
+    user_id INT,
     store_id INT,
     total_work_hours DECIMAL(5,2) NOT NULL,
     FOREIGN KEY (staff_id)
@@ -285,6 +296,10 @@ CREATE TABLE driver_assistant(
         ON DELETE CASCADE ,
     FOREIGN KEY (store_id)
         REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE 
 );
@@ -293,6 +308,7 @@ CREATE TABLE driver_assistant(
 CREATE TABLE driver(
     driver_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
+    user_id INT,
     store_id INT,
     total_work_hours DECIMAL(5,2) NOT NULL,
     FOREIGN KEY (staff_id)
@@ -301,6 +317,10 @@ CREATE TABLE driver(
         ON DELETE CASCADE ,
     FOREIGN KEY (store_id)
         REFERENCES store(store_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE 
 );
@@ -378,8 +398,13 @@ CREATE TABLE user_contact_number(
 CREATE TABLE company_manager(
     company_manager_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
+    user_id INT,
     FOREIGN KEY (staff_id)
         REFERENCES staff(staff_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (user_id)
+        REFERENCES user_data(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
