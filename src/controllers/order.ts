@@ -9,6 +9,7 @@ const getPastOrders = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -26,6 +27,7 @@ const getPastOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -46,6 +48,7 @@ const cancelOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -65,6 +68,7 @@ const confirmOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:"driver_assistant"
     },
     handlers: [
       (req: Request, res: Response) => async (
