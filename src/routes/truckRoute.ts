@@ -8,6 +8,6 @@ router.get('/', handleRequest('truckRoute','truckId'));
 router.get('/freeDrivers', handleRequest('driver','driverName'));
 router.get('/freeDriverAssistants', handleRequest('driverAssistant','driverAssistantName'));
 router.post('/newTruckTrip', handleRequest("truckRoute", "truckTrip"));
-router.get('/truckRoute/:truck_schedule_id',handleRequest("truckRoute","getTruckRouteByID"));
+router.get('/truckRouteByID/:truck_route_id',handleRequest("truckRoute","getTruckRouteByID"));
 
 export default router;

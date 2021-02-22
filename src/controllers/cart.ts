@@ -10,6 +10,7 @@ const getCart = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -28,6 +29,7 @@ const setCartQuntity = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -47,6 +49,7 @@ const productDeleteFromCart = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
+      userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (

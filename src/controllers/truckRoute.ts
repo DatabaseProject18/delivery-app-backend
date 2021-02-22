@@ -75,14 +75,15 @@ const truckRoutes = (): RHandler => {
   const getTruckRouteByID = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        userType:'driver_assistant'
       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
         ): Promise<ResponseResult> => {
           //console.log("AAAAAAAAAA")
-          return await truckRouteByID(+req.params.truck_schedule_id);
+          return await truckRouteByID(+req.params.truck_route_id);
         },
       ],
     };

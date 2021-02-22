@@ -8,7 +8,7 @@ import {sheduledTruckTrips,truckTripDetails,truckTripOrderDetails} from "../mode
 const getSheduledTruckTrips = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -16,12 +16,9 @@ const getSheduledTruckTrips = (): RHandler => {
         ): Promise<ResponseResult> => {
             //console.log(req.query);
             let id;
-            if (req.query.type === "driver") {
-                id = req.query.driver_id; // this should be changed
-            }
-            else if (req.query.type === "driver_assistant") {
-                 id = req.query.driver_assistant_id; // this should be changed
-            }
+            if (req.query.type === "driver") id = req.query.driver_id; 
+            else if (req.query.type === "driver_assistant") id = req.query.driver_assistant_id; 
+            
             return await sheduledTruckTrips(id,String(req.query.type) ,String( req.query.date), String(req.query.isPast));
       },
     ],
@@ -33,7 +30,8 @@ const getSheduledTruckTrips = (): RHandler => {
 const getTruckTripDetails = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
+      userType:'driver_assistant'
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -51,7 +49,8 @@ const getTruckTripDetails = (): RHandler => {
 const getTruckTripOrderDetails = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: true,
+      userType:'driver_assistant'
     },
     handlers: [
       (req: Request, res: Response) => async (
