@@ -56,7 +56,7 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
 
 const getDriverDetails = (): Promise<ResponseResult> => {
     return queryBuilder({
-        select: ["first_name","last_name","email","driver_id"],
+        select: ["driver_id","first_name","last_name","email"],
         from: "user_data",
         join: { "staff": "user_id", "driver": "staff_id" },
         where: [{columnName: "user_type", comOperator: "=",value: "Driver"}]

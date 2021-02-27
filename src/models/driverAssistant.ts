@@ -51,8 +51,7 @@ const getDriverAssistantName = async (start_time: Date, end_time: Date): Promise
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
         where: [{columnName: "user_type", comOperator: "=",value: "Driver Assistant"}] 
     }); 
-    console.log(busyDriverAssistantIds)
-    console.log(allDriverAssistantDetails.data.multiple);
+
 
     const freeDriverAssistantDetails = allDriverAssistantDetails.data.multiple.filter((elem) => !busyDriverAssistantIds.find(({ driver_assistant_id }) => elem.driver_assistant_id === driver_assistant_id));
     

@@ -6,8 +6,7 @@ import { getDriverName, getDriverDetails, getDriverFullDetails} from '../models/
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        //hasAccessToken: true,
-        //hasRefreshToken: true,
+        hasAccessToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -24,7 +23,6 @@ const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -41,7 +39,6 @@ const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
