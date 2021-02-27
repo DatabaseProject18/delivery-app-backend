@@ -114,7 +114,11 @@ const getCustomerOrderInYear = (year: string): Promise<ResponseResult> => {
 const getCustomerBasicOrderDetails = (
   customerId: number
 ): Promise<ResponseResult> => {
-  return call("get_customer_basic_order_details",[customerId]);
+  return call("get_customer_basic_order_details", [customerId]);
+};
+
+const getAllYears = (): Promise<ResponseResult> => {
+  return call("get_all_years");
 };
 
 export {
@@ -137,4 +141,5 @@ export {
   getCustomerOrder,
   getCustomerOrderInYear,
   getCustomerBasicOrderDetails,
+  getAllYears,
 };

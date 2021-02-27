@@ -41,4 +41,7 @@ router.get("/customer-order", handleRequest("report", "customerOrder"));
 //get basic order details of a customer
 router.get("/customer-order-basic-details", handleRequest("report", "customerBasicOrderDetails"));
 
+//get all years that have orders
+router.get("/all-years", handleRequest("report", "allYears"));
+
 export default router;
