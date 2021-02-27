@@ -409,3 +409,16 @@ DELIMITER ;
 	 		 GROUP BY order_status;
 	 END $$
 	 DELIMITER ;
+
+
+	 /*
+	 * Get all years that have orders
+	 */
+	 DROP PROCEDURE IF EXISTS get_all_years;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_all_years()
+	 BEGIN
+	 		SELECT DISTINCT YEAR(order_date) AS year
+	 		FROM order_table;
+	 END $$
+	 DELIMITER ;

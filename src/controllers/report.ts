@@ -21,6 +21,7 @@ import {
   getCustomerOrder,
   getCustomerOrderInYear,
   getCustomerBasicOrderDetails,
+  getAllYears,
 } from "../models/report";
 import Joi from "joi";
 
@@ -312,6 +313,20 @@ const customerBasicOrderDetails = (): RHandler => {
   return rHandlerData;
 };
 
+const allYears = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {},
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return getAllYears();
+      },
+    ],
+  };
+  return rHandlerData;
+};
+
 export {
   yearsIncome,
   quarterlyIncome,
@@ -323,4 +338,5 @@ export {
   truckUsedHours,
   customerOrder,
   customerBasicOrderDetails,
+  allYears,
 };
