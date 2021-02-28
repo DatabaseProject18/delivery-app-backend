@@ -20,11 +20,11 @@ const getTruckRoutes = (store_id: number): Promise<ResponseResult> => {
     });
 }
 
-const getTruckId = (date_time: Date): Promise<ResponseResult> => {
+const getTruckId = (store_id: number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: ["truck_id"],
-        from: "truck_schedule",
-        where: [{columnName: "date_time", comOperator: "!=",value: date_time}]
+        select: ["truck_id","registration_no","truck_capacity"],
+        from: "truck",
+        where: [{columnName: "store_id", comOperator: "=",value: store_id}]
     });
 }
 
@@ -39,6 +39,17 @@ const createTruckTrip = (req: Object): Promise<ResponseResult> => {
     });
 }
 
+const createScheduledOrder = (req: Object): Promise<ResponseResult> => {
+    console.log(req);
+    return queryBuilder({
+        insert: {
+            tableName: "scheduled_order",
+            columns: ["order_id","truck_schedule_id"],
+            values: Object.values(req),
+        }
+    });
+}
+
 const truckRouteByID = (truck_route_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["town"],
@@ -48,7 +59,7 @@ const truckRouteByID = (truck_route_id: number): Promise<ResponseResult> => {
     });
     
 }
-const getSroreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
+const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["store_id"],
         from: "store_manager",
@@ -56,4 +67,4 @@ const getSroreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseR
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getSroreIDByStoreManagerID};
+export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder};
