@@ -8,7 +8,8 @@ import {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRoute
 const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        //hasAccessToken: true,
+
+        hasAccessToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (

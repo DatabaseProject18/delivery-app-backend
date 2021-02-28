@@ -111,7 +111,7 @@ const ordersByTown = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
-      hasRefreshToken: true,
+      //hasRefreshToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
