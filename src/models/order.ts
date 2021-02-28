@@ -14,7 +14,6 @@ const pastOrders = (user_id: number): Promise<ResponseResult> => {
 };
 
 const pastOrder = (
-  user_id: number,
   order_id: number
 ): Promise<ResponseResult> => {
   return queryBuilder({
@@ -31,9 +30,7 @@ const pastOrder = (
     ],
     from: "ordered_product",
     join: { product: "product_id", order_table: "order_id" },
-    operator: "AND",
     where: [
-      { columnName: "customer_id", comOperator: "=", value: user_id },
       { columnName: "order_id", comOperator: "=", value: order_id },
     ],
   });
