@@ -115,16 +115,13 @@ const CreateAnOrder = (req: Object): Promise<ResponseResult> => {
   });
 };
 
-const getOrdersByTown = (town: String): Promise<ResponseResult> => {
+const getOrdersByRouteId = (route_id: number): Promise<ResponseResult> => {
   return queryBuilder({
     select: ["order_id"],
-    from: "covered_area",
-    join: {
-      truck_schedule: "truck_route_id",
-      scheduled_order: "truck_schedule_id",
-    },
-    where: [{ columnName: "town", comOperator: "=", value: town }],
-    order: { ["date_time"]: "ASC" },
+    from: "order_table",
+    operator: "AND",
+    where: [{ columnName: "route_id", comOperator: "=", value: route_id },{ columnName: "order_status", comOperator: "=", value: "Sent"}],
+    order: { ["order_date"]: "ASC" },
   });
 };
 
@@ -139,7 +136,7 @@ export {
   ConfirmAnOrder,
   orderStatus,
   CreateAnOrder,
-  getOrdersByTown,
+  getOrdersByRouteId,
   newOrders,
   newOrder,
   rejectAnOrder,
