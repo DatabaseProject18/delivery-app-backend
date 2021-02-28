@@ -41,9 +41,9 @@ const getPastOrder = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        const customer_id = 1; // this should be changed
+        //const customer_id = 1; // this should be changed
         //console.log(req.params.order_id)
-        return await pastOrder(customer_id, +req.params.order_id);
+        return await pastOrder(+req.params.order_id);
       },
     ],
   };
