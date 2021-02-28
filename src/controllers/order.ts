@@ -26,8 +26,8 @@ const getPastOrders = (): RHandler => {
 const getPastOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken: true,
-      userType:'customer'
+      //hasAccessToken: true,
+      //userType:'customer'
     },
     handlers: [
       (req: Request, res: Response) => async (
