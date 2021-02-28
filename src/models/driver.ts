@@ -54,12 +54,13 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
     return allDriverDetails;    
 }
 
-const getDriverDetails = (): Promise<ResponseResult> => {
+const getDriverDetails = (store_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["driver_id","first_name","last_name","email"],
         from: "user_data",
         join: { "staff": "user_id", "driver": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver"}]
+        operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "Driver"},{columnName: "store_id", comOperator: "=",value: store_id}]
     });
 }
 
@@ -73,5 +74,13 @@ const getDriverFullDetails = (driver_id: number): Promise<ResponseResult> => {
     });
 }
 
+const getSroreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["store_id"],
+        from: "store_manager",
+        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}] 
+    });
+}
 
-export { getDriverName, getDriverDetails, getDriverFullDetails };
+
+export { getDriverName, getSroreIDByStoreManagerID,getDriverDetails, getDriverFullDetails };
