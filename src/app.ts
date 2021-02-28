@@ -12,6 +12,7 @@ import driverRouter from './routes/driver';
 import userRouter from './routes/user';
 import cartRouter from './routes/cart';
 import truckTripRouter from './routes/truckTrip';
+import reportRouter from './routes/report';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,6 +39,7 @@ app.use("/api/deliveryManager", deliveryManagerRouter);
 app.use("/api/customer", CustomerRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/truckTrip",truckTripRouter);
+app.use("/api/report",reportRouter);
 
 const port = process.env.PORT || 3005;
 
