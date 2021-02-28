@@ -9,7 +9,7 @@ import {
   CancelAnOrder,
   ConfirmAnOrder,
   orderStatus,
-  getOrdersByTown,
+  getOrdersByRouteId,
   CreateAnOrder,
   getOrdersCountByStatus,
 } from "../models/order";
@@ -107,7 +107,7 @@ const getOrderStatus = (): RHandler => {
   return rHandlerData;
 };
 
-const ordersByTown = (): RHandler => {
+const ordersByRouteId = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
@@ -117,7 +117,7 @@ const ordersByTown = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        return await getOrdersByTown(req.body.town);
+        return await getOrdersByRouteId(req.body.town);
       },
     ],
   };
@@ -162,7 +162,7 @@ export {
   cancelOrder,
   confirmOrder,
   getOrderStatus,
-  ordersByTown,
+  ordersByRouteId,
   createOrder,
   orderCountByStatus,
 };
