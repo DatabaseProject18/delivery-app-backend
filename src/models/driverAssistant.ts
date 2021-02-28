@@ -59,24 +59,32 @@ const getDriverAssistantName = async (start_time: Date, end_time: Date): Promise
     return allDriverAssistantDetails;    
 }
 
+const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["store_id"],
+        from: "store_manager",
+        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}] 
+    });
+}
 
-const getDriverAssistantDetails = (): Promise<ResponseResult> => {
+const getDriverAssistantDetails = (store_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["first_name","last_name","email","driver_assistant_id"],
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver Assistant"}]
+        operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "driver_assistant"},{columnName: "store_id", comOperator: "=",value: store_id}]
     });
 }
 
 const getDriverAssistantFullDetails = (driver_assistant_id: number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: null,
+        select: ["first_name","last_name","email","staff_id","store_id","total_work_hours"],
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
         operator: "AND",
-        where: [{columnName: "user_id", comOperator: "=",value: driver_assistant_id}, {columnName: "user_type", comOperator: "=",value: "Driver Assistant"}] 
+        where: [{columnName: "driver_assistant_id", comOperator: "=",value: driver_assistant_id}, {columnName: "user_type", comOperator: "=",value: "driver_assistant"}] 
     });
 }
 
-export { getDriverAssistantName, getDriverAssistantDetails, getDriverAssistantFullDetails };
+export { getDriverAssistantName, getStoreIDByStoreManagerID, getDriverAssistantDetails, getDriverAssistantFullDetails };
