@@ -32,13 +32,17 @@ const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
+         (req: Request, res: Response) => async (
+          data: ResponseResult
+          ): Promise<ResponseResult> => {
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        },
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getTruckId(req.body.store_id);
+          return await getTruckId(data.data.multiple[0].store_id);
         },
       ],
     };

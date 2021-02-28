@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/truckRoutes',handleRequest("truckRoute","truckRoutes"));
 router.get('/scheduledOrders', handleRequest("order","ordersByRouteId"));
-router.get('/', handleRequest('truckRoute','truckId'));
+router.get('/trucks', handleRequest('truckRoute','truckId'));
 router.get('/freeDrivers', handleRequest('driver','driverName'));
 router.get('/freeDriverAssistants', handleRequest('driverAssistant','driverAssistantName'));
 router.post('/newTruckTrip', handleRequest("truckRoute", "truckTrip"));
