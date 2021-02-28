@@ -2,7 +2,7 @@ import Joi from "joi";
 import _ from "lodash";
 
 export interface ValidateHandlerData {
-  body: { [name: string]: any };
+  body?: { [name: string]: any };
   query?: { [name: string]: any };
   params?: { [name: string]: any };
 }
