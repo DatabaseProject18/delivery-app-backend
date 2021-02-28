@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getDriverAssistantName, getDriverAssistantDetails, getDriverAssistantFullDetails} from '../models/driverAssistant';
+import { getDriverAssistantName, getDriverAssistantDetails, getDriverAssistantFullDetails, getStoreIDByStoreManagerID} from '../models/driverAssistant';
 
 const driverAssistantName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        //hasAccessToken: true,
-        //hasRefreshToken: true,
+        hasAccessToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -24,13 +23,17 @@ const driverAssistantName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        },
+        (req: Request, res: Response) => async (
+          data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getDriverAssistantDetails();
+          return await getDriverAssistantDetails(data.data.multiple[0].store_id);
         },
       ],
     };
@@ -41,7 +44,6 @@ const driverAssistantName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
