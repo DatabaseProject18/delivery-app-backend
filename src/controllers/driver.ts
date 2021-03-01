@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getDriverName, getDriverDetails, getDriverFullDetails} from '../models/driver';
+import { getDriverName, getDriverDetails, getDriverFullDetails,getStoreIDByStoreManagerID} from '../models/driver';
 
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
@@ -27,8 +27,13 @@ const driverName = (): RHandler => {
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverDetails();
+        ): Promise<ResponseResult> => {
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        },
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await getDriverDetails(data.data.multiple[0].store_id);
         },
       ],
     };
@@ -50,8 +55,5 @@ const driverName = (): RHandler => {
     };
     return rHandlerData;
   };
-
-  
-  
 
 export { driverName, driverDetails, driverFullDetails }
