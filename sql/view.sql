@@ -8,6 +8,7 @@ SELECT
     concat(u_dr.first_name, ' ', u_dr.last_name) driver_name,
     concat(u_ds.first_name, ' ' , u_ds.last_name) driver_assistant_name,
     registration_no truck_number,
+    t.store_id,
     distance,
     average_time,
     truck_route_id,
@@ -27,35 +28,49 @@ JOIN user_data u_dr
 	ON u_dr.user_id = dr.user_id
 JOIN user_data u_ds
 	ON u_ds.user_id = ds.user_id
-JOIN truck
+JOIN truck t
 	USING(truck_id)
 JOIN truck_route tr
 	USING(truck_route_id);
 
 
+DROP VIEW IF EXISTS new_single_order_details;
+CREATE VIEW  new_single_order_details AS
+SELECT
+    ot.order_id,
+    ot.order_date,
+    ot.delivery_date,
+    p.product_name,
+    p.product_volume,
+    s.destination
+FROM order_table ot,
+     store s,
+     truck_route tr,
+     train_route tar,
+     ordered_product op,
+     product p
+WHERE ot.order_status = 'cart' AND
+        ot.route_id = tr.truck_route_id AND
+        tr.train_route_id = tar.train_route_id AND
+        tar.store_id = s.store_id AND
+        ot.order_id = op.order_id AND
+        op.product_id = p.product_id;
+
 DROP VIEW IF EXISTS new_order_details;
 CREATE VIEW  new_order_details AS
 SELECT
-        ot.order_id,
-        ot.order_date,
-        ot.delivery_date,
-        p.product_name,
-        p.product_volume,
-        s.destination,
-        t.train_name
+    ot.order_id,
+    ot.order_date,
+    ot.delivery_date,
+    s.destination
 FROM order_table ot,
-train t,
-store s,
-truck_route tr,
-train_route tar,
-ordered_product op,
-product p
+     store s,
+     truck_route tr,
+     train_route tar
 WHERE ot.order_status = 'cart' AND
-ot.route_id = tr.truck_route_id AND
-tr.train_route_id = tar.train_route_id AND
-tar.store_id = s.store_id AND
-ot.order_id = op.order_id AND
-op.product_id = p.product_id;
+        ot.route_id = tr.truck_route_id AND
+        tr.train_route_id = tar.train_route_id AND
+        tar.store_id = s.store_id;
 
 -- order_delivery_details
 

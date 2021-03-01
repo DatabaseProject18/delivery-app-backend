@@ -9,7 +9,7 @@ import {
   CancelAnOrder,
   ConfirmAnOrder,
   orderStatus,
-  getOrdersByTown,
+  getOrdersByRouteId,
   CreateAnOrder,
   getOrdersCountByStatus,
 } from "../models/order";
@@ -41,9 +41,9 @@ const getPastOrder = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        const customer_id = 1; // this should be changed
+        //const customer_id = 1; // this should be changed
         //console.log(req.params.order_id)
-        return await pastOrder(customer_id, +req.params.order_id);
+        return await pastOrder(+req.params.order_id);
       },
     ],
   };
@@ -107,17 +107,17 @@ const getOrderStatus = (): RHandler => {
   return rHandlerData;
 };
 
-const ordersByTown = (): RHandler => {
+const ordersByRouteId = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
-      hasRefreshToken: true,
+      //hasRefreshToken: true,
     },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        return await getOrdersByTown(req.body.town);
+        return await getOrdersByRouteId(req.body.town);
       },
     ],
   };
@@ -164,7 +164,7 @@ export {
   cancelOrder,
   confirmOrder,
   getOrderStatus,
-  ordersByTown,
+  ordersByRouteId,
   createOrder,
   orderCountByStatus,
 };
