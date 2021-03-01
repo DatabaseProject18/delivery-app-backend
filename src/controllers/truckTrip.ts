@@ -3,7 +3,7 @@ import Joi from "joi";
 import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {sheduledTruckTrips,truckTripDetails,truckTripOrderDetails} from "../models/truckTrip";
+import {sheduledTruckTrips,truckTripDetails,truckTripOrderDetails,allSheduledTruckTrips} from "../models/truckTrip";
 
 const getSheduledTruckTrips = (): RHandler => {
   const rHandlerData: RHandler = {
@@ -64,6 +64,21 @@ const getTruckTripOrderDetails = (): RHandler => {
   return rHandlerData;
 };
 
+const getNewSheduledTruckTrips = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasAccessToken: true,
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+        ): Promise<ResponseResult> => {
+            return await allSheduledTruckTrips(String( req.query.date));
+      },
+    ],
+  };
+  return rHandlerData;
+};
 
 
-export { getSheduledTruckTrips, getTruckTripOrderDetails,getTruckTripDetails}
+export { getSheduledTruckTrips, getTruckTripOrderDetails,getTruckTripDetails,getNewSheduledTruckTrips}

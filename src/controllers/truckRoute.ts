@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder} from '../models/truckRoute';
+import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID} from '../models/truckRoute';
 
 
 const truckRoutes = (): RHandler => {
@@ -118,5 +118,21 @@ const scheduledOrder = (): RHandler => {
     return rHandlerData;
   };
   
+    const getRouteDetailsByRouteID = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        hasAccessToken: true,
+        
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await routeDetailsByRouteID(+req.query.truck_route_id);
+        },
+      ],
+    };
+    return rHandlerData;
+  };
 
-export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder}
+export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder,getRouteDetailsByRouteID}

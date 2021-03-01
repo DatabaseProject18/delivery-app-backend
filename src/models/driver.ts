@@ -1,7 +1,7 @@
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverName = async (start_time: Date, end_time: Date): Promise<ResponseResult> => {
+const getDriverName = async (start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
