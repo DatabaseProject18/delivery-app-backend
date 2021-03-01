@@ -48,7 +48,7 @@ const newOrders = (): Promise<ResponseResult> => {
 const newOrder = (order_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: null,
-        from: "new_order_details",
+        from: "new_single_order_details",
         where:[{columnName:"order_id", comOperator: "=", value: order_id}]
     })
 }
