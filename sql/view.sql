@@ -8,6 +8,7 @@ SELECT
     concat(u_dr.first_name, ' ', u_dr.last_name) driver_name,
     concat(u_ds.first_name, ' ' , u_ds.last_name) driver_assistant_name,
     registration_no truck_number,
+    t.store_id,
     distance,
     average_time,
     truck_route_id,
@@ -27,7 +28,7 @@ JOIN user_data u_dr
 	ON u_dr.user_id = dr.user_id
 JOIN user_data u_ds
 	ON u_ds.user_id = ds.user_id
-JOIN truck
+JOIN truck t
 	USING(truck_id)
 JOIN truck_route tr
 	USING(truck_route_id);
