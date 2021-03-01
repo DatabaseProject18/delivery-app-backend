@@ -37,7 +37,7 @@ import { getUserDetails, getUserFullDetails} from '../models/user';
     return rHandlerData;
   };
 
-  
-  
+
+
 
 export { userDetails, userFullDetails }
