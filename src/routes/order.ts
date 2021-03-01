@@ -11,5 +11,6 @@ router.patch('/ConfirmOrder/:order_id', handleRequest("order", "confirmOrder"));
 router.get('/OrderStatus/:order_id', handleRequest("order", "getOrderStatus"));
 router.get('/OrdersByTown', handleRequest("order", "ordersByTown"));
 router.get('/CreateOrder', handleRequest("order", "createOrder"));
+router.get("/order-count-by-status", handleRequest("order", "orderCountByStatus"))
 
 export default router;

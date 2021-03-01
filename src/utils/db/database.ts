@@ -173,7 +173,7 @@ const resultGenrator = (
 ): ResponseResult => {
   let responseResult: ResponseResult = {};
   if (error) {
-    //console.log(error);
+    console.log(error);
     const errorDetails: ErrorDetail = getErrorDetails(error.code);
     responseResult.resCode = errorDetails.resCode;
     _.set(responseResult, "error.single", errorDetails.msg);
@@ -241,6 +241,9 @@ export const call = (
     connect();
 
     connection.query(`CALL ??(?)`, [name, args], (error, result, field) => {
+      if (result){
+        result = result[0];
+      }
       resolve(resultGenrator(error, result, field));
     });
   });
