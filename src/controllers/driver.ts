@@ -12,7 +12,7 @@ const driverName = (): RHandler => {
         (req: Request, res: Response) => async (
             data: ResponseResult
             ): Promise<ResponseResult> => {
-            return await getDriverName(req.body.start_time,req.body.end_time);
+            return await getDriverName(String( req.query.start_time),String( req.query.end_time));
           },
       ],
     };

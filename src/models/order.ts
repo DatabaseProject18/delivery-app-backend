@@ -79,6 +79,24 @@ const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
     });
 }
 
+
+const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["order_status"],
+        from: "order_table",
+        operator:"AND",
+        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
+    });
+}
+// =======
+//   return queryBuilder({
+//     select: null,
+//     from: "new_order_details",
+//     where: [{ columnName: "order_id", comOperator: "=", value: order_id }],
+//   });
+// };
+
+
 // const rejectAnOrder = (order_id: number): Promise<ResponseResult> => {
 //   return queryBuilder({
 //     update: { tableName: "order_table", values: { order_status: "rejected" } },
@@ -108,6 +126,7 @@ const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
 //   });
 // };
 
+
 const CreateAnOrder = (req: Object): Promise<ResponseResult> => {
   return queryBuilder({
     insert: {
@@ -128,11 +147,9 @@ const CreateAnOrder = (req: Object): Promise<ResponseResult> => {
 
 const getOrdersByRouteId = (route_id: number): Promise<ResponseResult> => {
   return queryBuilder({
-    select: ["order_id"],
-    from: "order_table",
-    operator: "AND",
-    where: [{ columnName: "route_id", comOperator: "=", value: route_id },{ columnName: "order_status", comOperator: "=", value: "Sent"}],
-    order: { ["order_date"]: "ASC" },
+    select: null,
+    from: "sent_orders",
+    where: [{ columnName: "route_id", comOperator: "=", value: route_id }],
   });
 };
 

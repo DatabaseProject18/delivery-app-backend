@@ -117,7 +117,7 @@ const ordersByRouteId = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        return await getOrdersByRouteId(req.body.town);
+        return await getOrdersByRouteId(+req.query.route_id);
       },
     ],
   };

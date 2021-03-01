@@ -7,6 +7,7 @@ SELECT
     date_time,
     concat(u_dr.first_name, ' ', u_dr.last_name) driver_name,
     concat(u_ds.first_name, ' ' , u_ds.last_name) driver_assistant_name,
+    truck_id,
     registration_no truck_number,
     t.store_id,
     distance,
@@ -96,3 +97,28 @@ JOIN covered_area ca
 	ON ca.truck_route_id = o.route_id AND ca.meet_position = o.meet_position
 WHERE order_status NOT IN ('Preparing', 'Canceled');
 
+
+
+DROP VIEW IF EXISTS sent_orders;
+CREATE VIEW sent_orders AS
+SELECT 
+	order_id,
+	order_date,
+    delivery_date,
+    route_id,
+    (SELECT town 
+    FROM covered_area ca 
+    WHERE ca.truck_route_id=o.route_id AND 
+		ca.meet_position=o.meet_position) place_of_delivery,
+	(SELECT 
+		SUM(product_volume)
+	FROM ordered_product op
+	JOIN product
+		USING(product_id)
+	WHERE op.order_id = o.order_id
+	GROUP BY order_id) total_volume
+FROM order_table o
+WHERE order_status = "Sent"
+	AND order_id NOT IN
+		(SELECT order_id 
+		 FROM scheduled_order);
