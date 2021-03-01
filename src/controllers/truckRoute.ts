@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip} from '../models/truckRoute';
+import {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID} from '../models/truckRoute';
 
 
 const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -29,7 +30,8 @@ const truckRoutes = (): RHandler => {
   const truckId = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
@@ -45,13 +47,14 @@ const truckRoutes = (): RHandler => {
   const truckTrip = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       validateSchema: {
         body: {
           truck_route_id: Joi.number().min(1).required(),
           truck_id: Joi.number().min(1).required(),
-          date_time: Joi.date().required(),
+          date_time: Joi.date().iso().required(),
           store_manager_id: Joi.number().min(1).required(),
           driver_id: Joi.number().min(1).required(),
           driver_assistant_id: Joi.number().min(1).required(),
@@ -67,7 +70,25 @@ const truckRoutes = (): RHandler => {
     };
   
     return rHandlerData;
+};
+  
+  const getTruckRouteByID = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        hasAccessToken: true,
+        userType:'driver_assistant'
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          //console.log("AAAAAAAAAA")
+          return await truckRouteByID(+req.params.truck_route_id);
+        },
+      ],
+    };
+    return rHandlerData;
   };
   
 
-export {truckRoutes, truckId, truckTrip}
+export {truckRoutes, truckId, truckTrip,getTruckRouteByID}

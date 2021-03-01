@@ -1,25 +1,19 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getDriverId, getDriverName, getDriverIds, getDriverDetails, getDriverFullDetails} from '../models/driver';
+import { getDriverName, getDriverDetails, getDriverFullDetails} from '../models/driver';
 
 const driverName = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasAccessToken: true,
-        hasRefreshToken: true,
-        userType: customer
+        //hasAccessToken: true,
+        //hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverId(+req.params.truck_id);
-        },
-        (req: Request, res: Response) => async (
             data: ResponseResult
             ): Promise<ResponseResult> => {
-            return await getDriverName(data.data.multiple[0].driver_id);
+            return await getDriverName(req.body.start_time,req.body.end_time);
           },
       ],
     };
@@ -29,18 +23,14 @@ const driverName = (): RHandler => {
   const driverDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getDriverIds();
-        },
-        (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverDetails(data.data.multiple[0].driver_id);
+          return await getDriverDetails();
         },
       ],
     };
@@ -50,7 +40,8 @@ const driverName = (): RHandler => {
   const driverFullDetails = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-        hasToken: false,
+        hasAccessToken: true,
+        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (

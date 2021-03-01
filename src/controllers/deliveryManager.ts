@@ -8,7 +8,6 @@ import {newOrders, newOrder, rejectAnOrder, shipAnOrder} from "../models/order"
 const getNewOrders = (): RHandler => {
     const rHandlerData: RHandler = {
         authSchema: {
-            hasToken: false,
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -24,7 +23,6 @@ const getNewOrders = (): RHandler => {
 const getNewOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
-            hasToken: false,
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -40,7 +38,6 @@ const getNewOrder = (): RHandler => {
 const rejectOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
-            hasToken: false,
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -56,7 +53,6 @@ const rejectOrder = (): RHandler => {
 const shipOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
-            hasToken: false,
         },
         handlers: [
             (req: Request, res: Response) => async (

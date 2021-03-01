@@ -5,8 +5,9 @@ const router = express.Router();
 router.get('/truckRoutes',handleRequest("truckRoute","truckRoutes"));
 router.get('/scheduledOrders', handleRequest("order","ordersByTown"));
 router.get('/', handleRequest('truckRoute','truckId'));
-router.get('/driver/:truck_id', handleRequest('driver','driverName'));
-router.get('/driverAssistant/:truck_id', handleRequest('driverAssistant','driverAssistantName'));
-router.post('/newTruckTrip', handleRequest("truckRoute","truckTrip"));
+router.get('/freeDrivers', handleRequest('driver','driverName'));
+router.get('/freeDriverAssistants', handleRequest('driverAssistant','driverAssistantName'));
+router.post('/newTruckTrip', handleRequest("truckRoute", "truckTrip"));
+router.get('/truckRouteByID/:truck_route_id',handleRequest("truckRoute","getTruckRouteByID"));
 
 export default router;
