@@ -1,41 +1,59 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import { getUserDetails, getUserFullDetails} from '../models/user';
+import {
+  getUserDetails,
+  getUserFullDetails,
+  getUsersDetailsWithAccountStatus,
+} from "../models/user";
 
-  const userDetails = (): RHandler => {
-    const rHandlerData: RHandler = {
-      authSchema: {
-        hasAccessToken: true,
+const userDetails = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasAccessToken: true,
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return await getUserDetails();
       },
-      handlers: [
-        (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getUserDetails();
-        },
-      ],
-    };
-    return rHandlerData;
+    ],
   };
+  return rHandlerData;
+};
 
-  const userFullDetails = (): RHandler => {
-    const rHandlerData: RHandler = {
-      authSchema: {
-        hasAccessToken: true,
+const userFullDetails = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasAccessToken: true,
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return await getUserFullDetails(+req.params.user_id);
       },
-      handlers: [
-        (req: Request, res: Response) => async (
-          data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getUserFullDetails(+req.params.user_id);
-        },
-      ],
-    };
-    return rHandlerData;
+    ],
   };
+  return rHandlerData;
+};
 
-  
-  
+const usersDetailsWithAccountStatus = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasAccessToken: true,
+      userType: "admin",
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return await getUsersDetailsWithAccountStatus();
+      },
+    ],
+  };
+  return rHandlerData;
+};
 
-export { userDetails, userFullDetails }
+export { userDetails, userFullDetails, usersDetailsWithAccountStatus };

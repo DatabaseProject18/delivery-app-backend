@@ -58,7 +58,6 @@ const newOrders = (): Promise<ResponseResult> => {
 };
 
 const newOrder = (order_id: number): Promise<ResponseResult> => {
-
     return queryBuilder({
         select: null,
         from: "new_single_order_details",
@@ -80,6 +79,7 @@ const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
     });
 }
 
+
 const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["order_status"],
@@ -95,6 +95,7 @@ const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> 
 //     where: [{ columnName: "order_id", comOperator: "=", value: order_id }],
 //   });
 // };
+
 
 // const rejectAnOrder = (order_id: number): Promise<ResponseResult> => {
 //   return queryBuilder({

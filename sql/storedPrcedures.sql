@@ -40,7 +40,7 @@ DELIMITER ;
  DELIMITER ;
 
  /*
-  * Get all income for each years
+  * Get all quarterly income for given year
   */
   DROP PROCEDURE IF EXISTS get_quarterly_income_of_year;
   DELIMITER $$
@@ -48,19 +48,19 @@ DELIMITER ;
 		year CHAR(4)
 	)
   BEGIN
-		SELECT SUM(cost) AS income,COUNT(*) AS num_of_orders
+		SELECT 1 AS quarter,SUM(cost) AS income,COUNT(*) AS num_of_orders
 		FROM order_table
 		WHERE (order_date BETWEEN CONCAT(year,'-01-01') AND CONCAT(year,'-03-31')) AND order_status != 'Canceled'
 		UNION
-		SELECT SUM(cost) AS income,COUNT(*) AS num_of_orders
+		SELECT 2 AS quarter,SUM(cost) AS income,COUNT(*) AS num_of_orders
 		FROM order_table
 		WHERE (order_date BETWEEN CONCAT(year,'-04-01') AND CONCAT(year,'-06-30')) AND order_status != 'Canceled'
 		UNION
-		SELECT SUM(cost) AS income,COUNT(*) AS num_of_orders
+		SELECT 3 AS quarter,SUM(cost) AS income,COUNT(*) AS num_of_orders
 		FROM order_table
 		WHERE (order_date BETWEEN CONCAT(year,'-07-01') AND CONCAT(year,'-09-30')) AND order_status != 'Canceled'
 		UNION
-		SELECT SUM(cost) AS income,COUNT(*) AS num_of_orders
+		SELECT 4 AS quarter,SUM(cost) AS income,COUNT(*) AS num_of_orders
 		FROM order_table
 		WHERE (order_date BETWEEN CONCAT(year,'-10-01') AND CONCAT(year,'-12-31')) AND order_status != 'Canceled';
   END $$
@@ -420,5 +420,36 @@ DELIMITER ;
 	 BEGIN
 	 		SELECT DISTINCT YEAR(order_date) AS year
 	 		FROM order_table;
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Get count of search result
+	 */
+	 DROP PROCEDURE IF EXISTS get_search_result_count;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_search_result_count(
+		 name VARCHAR(255)
+	 )
+	 BEGIN
+			SELECT COUNT(*) AS count
+			FROM product
+			WHERE product_name LIKE CONCAT("%",name,"%");
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Get count of category search result
+	 */
+	 DROP PROCEDURE IF EXISTS get_category_search_result_count;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_category_search_result_count(
+		 name VARCHAR(255),
+		 category INT
+	 )
+	 BEGIN
+			SELECT COUNT(*) AS count
+			FROM product
+			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
 	 END $$
 	 DELIMITER ;
