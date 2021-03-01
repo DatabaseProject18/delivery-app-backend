@@ -144,7 +144,9 @@ const createOrder = (): RHandler => {
 
 const orderCountByStatus = (): RHandler => {
   const rHandlerData: RHandler = {
-    authSchema: {},
+    authSchema: {
+      hasAccessToken:true
+    },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
