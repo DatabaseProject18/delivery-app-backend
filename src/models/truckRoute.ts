@@ -40,12 +40,12 @@ const createTruckTrip = (req: Object): Promise<ResponseResult> => {
 }
 
 const createScheduledOrder = (req: Object): Promise<ResponseResult> => {
-    console.log(req);
+    console.log(Object.values(req));
     return queryBuilder({
         insert: {
             tableName: "scheduled_order",
             columns: ["order_id","truck_schedule_id"],
-            values: Object.values(req),
+            values: Object.values(req)[0],
         }
     });
 }

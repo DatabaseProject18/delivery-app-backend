@@ -114,7 +114,7 @@ const CreateAnOrder = (req: Object): Promise<ResponseResult> => {
 
 const getOrdersByRouteId = (route_id: number): Promise<ResponseResult> => {
   return queryBuilder({
-    select: ["order_id"],
+    select: ["order_id","order_date","delivery_date"],
     from: "order_table",
     operator: "AND",
     where: [{ columnName: "route_id", comOperator: "=", value: route_id },{ columnName: "order_status", comOperator: "=", value: "Sent"}],

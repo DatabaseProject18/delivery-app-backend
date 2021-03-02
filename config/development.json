@@ -2,7 +2,7 @@
   "database": {
     "host": "localhost",
     "user": "root",
-    "password": "1234",
+    "password": "",
     "name": "supply_chain_management_db"
   }
 }
