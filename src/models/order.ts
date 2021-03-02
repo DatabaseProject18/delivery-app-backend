@@ -132,7 +132,6 @@ const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> 
 //   });
 // };
 
-
 const CreateAnOrder = (req: Object): Promise<ResponseResult> => {
   return queryBuilder({
     insert: {
