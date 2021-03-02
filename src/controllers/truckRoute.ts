@@ -2,25 +2,26 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID} from '../models/truckRoute';
+import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder} from '../models/truckRoute';
 
 
 const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
+
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getTruckRouteIds(req.body.store_manager_id);
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
         },
         (req: Request, res: Response) => async (
             data: ResponseResult
-            ): Promise<ResponseResult> => {
-            return await getTruckRoutes(data.data.multiple[0].truck_route_id);
+        ): Promise<ResponseResult> => {
+          //console.log(data.data.multiple[0])
+            return await getTruckRoutes(data.data.multiple[0].store_id);
           },
       ],
     };
@@ -31,13 +32,17 @@ const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       handlers: [
+         (req: Request, res: Response) => async (
+          data: ResponseResult
+          ): Promise<ResponseResult> => {
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        },
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          return await getTruckId(req.body.date_time);
+          return await getTruckId(data.data.multiple[0].store_id);
         },
       ],
     };
@@ -71,6 +76,29 @@ const truckRoutes = (): RHandler => {
   
     return rHandlerData;
 };
+
+const scheduledOrder = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      //hasAccessToken: true,
+    },
+    validateSchema: {
+      // body: {
+      //   order_id: Joi.number().min(1).required(),
+      //   truck_schedule_id: Joi.number().min(1).required(),
+      // },
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return await createScheduledOrder(req.body)
+      },
+    ],
+  };
+
+  return rHandlerData;
+};
   
   const getTruckRouteByID = (): RHandler => {
     const rHandlerData: RHandler = {
@@ -91,4 +119,4 @@ const truckRoutes = (): RHandler => {
   };
   
 
-export {truckRoutes, truckId, truckTrip,getTruckRouteByID}
+export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder}

@@ -5,7 +5,7 @@ import { ResponseResult } from "../utils/res/responseBuilder";
 
 const cart = (user_id: number): Promise<ResponseResult> => {
     return queryBuilder({
-        select: ["cart_id","product_id","product_name","product_description","quantity","unit_price","discount","stock"],
+        select: ["cart_id","product_id","product_name","product_description","quantity","unit_price","discount","stock", "product_description"],
         from: "cart",
         join: { "product": "product_id" },
         operator:"AND",
