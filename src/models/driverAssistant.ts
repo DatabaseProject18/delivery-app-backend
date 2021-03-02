@@ -1,20 +1,20 @@
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverAssistantName = async (start_time: string, end_time: string): Promise<ResponseResult> => {
+const getDriverAssistantName = async (store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
         operator: "AND",
         where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }]   
     });
-
+    console.log(getDriverAssistantName);
     const pastConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
         where: [{ columnName: "date_time", comOperator: "<=", value: start_time }],
         order: {["date_time"]: "DESC"},
-        limit: [2] 
+        limit: [1] 
     });
 
     const futureConsecutiveDriverAssistants = await queryBuilder({
@@ -22,7 +22,7 @@ const getDriverAssistantName = async (start_time: string, end_time: string): Pro
         from: "truck_schedule",
         where: [{ columnName: "date_time", comOperator: ">=", value: end_time }],
         order: {["date_time"]: "ASC"},
-        limit: [2] 
+        limit: [1] 
     });
     
     let busyDriverAssistantIds = [];
@@ -49,7 +49,8 @@ const getDriverAssistantName = async (start_time: string, end_time: string): Pro
         select: ["first_name","last_name","driver_assistant_id"],
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver Assistant"}] 
+         operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "driver_assistant"},{columnName: "store_id", comOperator: "=",value: store_id}] 
     }); 
 
 
