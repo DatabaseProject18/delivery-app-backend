@@ -453,3 +453,20 @@ DELIMITER ;
 			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
 	 END $$
 	 DELIMITER ;
+
+
+ 	/*
+	 * update product stock after cancel order
+	 */
+	DROP PROCEDURE IF EXISTS update_product_stock;
+	 DELIMITER $$
+	 CREATE PROCEDURE update_product_stock(
+		 productID INT,
+		 quantity INT
+	 )
+	 BEGIN
+			UPDATE product
+			SET stock = stock + quantity
+			WHERE product_id = productID;
+	 END $$
+	 DELIMITER ;
