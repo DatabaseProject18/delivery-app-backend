@@ -93,7 +93,8 @@ const confirmOrder = (): RHandler => {
 const getOrderStatus = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: false,
+      userType: "customer",
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -127,7 +128,8 @@ const ordersByRouteId = (): RHandler => {
 const createOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasToken: false,
+      hasAccessToken: false,
+      userType: "customer",
     },
     handlers: [
       (req: Request, res: Response) => async (
