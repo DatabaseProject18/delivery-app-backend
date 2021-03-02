@@ -3,5 +3,5 @@
   "REFRESH_TOKEN_SECRET": "133b023d8159819116fca143204ff653d10336ad46ed8e76f4a64d97cdc0bec850eb9f93a974bd7455a4109a73e710adff689639fc88b2647e52819cbba3983c",
   "solt_times": 10,
   "token_expire_time": 30,
-  "items_per_page": 20
+  "items_per_page": 15
 }

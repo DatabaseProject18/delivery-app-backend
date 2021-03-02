@@ -454,6 +454,7 @@ DELIMITER ;
 	 END $$
 	 DELIMITER ;
 
+
     /*
 	 * Get total volume of an order
 	 */
@@ -466,3 +467,21 @@ DELIMITER ;
             SELECT supply_chain_management_db.get_total_volume_of_order(order_id)
     END $$
     DELIMITER ;
+
+
+ 	/*
+	 * update product stock after cancel order
+	 */
+	DROP PROCEDURE IF EXISTS update_product_stock;
+	 DELIMITER $$
+	 CREATE PROCEDURE update_product_stock(
+		 productID INT,
+		 quantity INT
+	 )
+	 BEGIN
+			UPDATE product
+			SET stock = stock + quantity
+			WHERE product_id = productID;
+	 END $$
+	 DELIMITER ;
+
