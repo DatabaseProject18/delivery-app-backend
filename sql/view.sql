@@ -50,7 +50,7 @@ FROM order_table ot,
      train_route tar,
      ordered_product op,
      product p
-WHERE ot.order_status = 'cart' AND
+WHERE ot.order_status = 'Preparing' AND
         ot.route_id = tr.truck_route_id AND
         tr.train_route_id = tar.train_route_id AND
         tar.store_id = s.store_id AND
@@ -68,7 +68,7 @@ FROM order_table ot,
      store s,
      truck_route tr,
      train_route tar
-WHERE ot.order_status = 'cart' AND
+WHERE ot.order_status = 'Preparing' AND
         ot.route_id = tr.truck_route_id AND
         tr.train_route_id = tar.train_route_id AND
         tar.store_id = s.store_id;

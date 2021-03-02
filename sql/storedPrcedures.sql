@@ -453,3 +453,16 @@ DELIMITER ;
 			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
 	 END $$
 	 DELIMITER ;
+
+    /*
+	 * Get total volume of an order
+	 */
+    DROP PROCEDURE IF EXISTS get_total_volume;
+    DELIMITER $$
+    CREATE PROCEDURE get_total_volume(
+        order_id DECIMAL
+    )
+    BEGIN
+            SELECT supply_chain_management_db.get_total_volume_of_order(order_id)
+    END $$
+    DELIMITER ;

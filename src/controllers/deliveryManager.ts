@@ -3,7 +3,7 @@ import Joi from "joi";
 import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {newOrders, newOrder, rejectAnOrder, shipAnOrder} from "../models/order"
+import {newOrders, newOrder, rejectAnOrder, shipAnOrder, getTotalVolumeForOrder} from "../models/order";
 
 const getNewOrders = (): RHandler => {
     const rHandlerData: RHandler = {
@@ -65,4 +65,19 @@ const shipOrder = (): RHandler => {
     return rHandlerData;
 };
 
-export {getNewOrders, getNewOrder, rejectOrder, shipOrder}
+const getTotalVolume = (): RHandler => {
+    const rHandlerData: RHandler ={
+        authSchema: {
+        },
+        handlers: [
+            (req: Request, res: Response) => async (
+                data: ResponseResult
+            ): Promise<ResponseResult> => {
+                return await getTotalVolumeForOrder(+req.params.order_id);
+            }
+        ],
+    };
+    return rHandlerData;
+};
+
+export {getNewOrders, getNewOrder, rejectOrder, shipOrder, getTotalVolume}
