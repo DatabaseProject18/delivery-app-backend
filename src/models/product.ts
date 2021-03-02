@@ -40,7 +40,7 @@ const getSearchByProductName = (
   name: string
 ): Promise<ResponseResult> => {
   return queryBuilder({
-    select: ["product_name", "unit_price", "product_description", "discount"],
+    select: ["product_id","product_name", "unit_price", "product_description", "discount"],
     from: "product",
     where: [
       {
@@ -59,7 +59,7 @@ const getSearchByProductNameFilterCategory = (
   name: string
 ): Promise<ResponseResult> => {
   return queryBuilder({
-    select: ["product_name", "unit_price", "product_description", "discount"],
+    select: ["product_id","product_name", "unit_price", "product_description", "discount"],
     from: "product",
     where: [
       {

@@ -57,7 +57,7 @@ const authorizeUser = (authSchema: AuthHandlerData) => (
           "user_id",
           "first_name",
           "user_type",
-          `${payload.user_type}`,
+          `${payload.user_type}_id`,
         ])
       );
     }
