@@ -28,7 +28,8 @@ import Joi from "joi";
 const yearsIncome = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     handlers: [
       (req: Request, res: Response) => async (
@@ -44,7 +45,8 @@ const yearsIncome = (): RHandler => {
 const quarterlyIncome = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -69,7 +71,8 @@ const quarterlyIncome = (): RHandler => {
 const basicOrderDetailsOfQuarter = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -102,7 +105,8 @@ const basicOrderDetailsOfQuarter = (): RHandler => {
 const orderCountOfProduct = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -130,7 +134,8 @@ const orderCountOfProduct = (): RHandler => {
 const cityRouteIncome = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -160,7 +165,8 @@ const cityRouteIncome = (): RHandler => {
 const driverWorkingHours = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -201,7 +207,8 @@ const driverWorkingHours = (): RHandler => {
 const driverAssistantWorkingHours = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -244,7 +251,8 @@ const driverAssistantWorkingHours = (): RHandler => {
 const truckUsedHours = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -285,7 +293,8 @@ const truckUsedHours = (): RHandler => {
 const customerOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -313,7 +322,8 @@ const customerOrder = (): RHandler => {
 const customerBasicOrderDetails = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     validateSchema: {
       query: {
@@ -336,7 +346,8 @@ const customerBasicOrderDetails = (): RHandler => {
 const allYears = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     handlers: [
       (req: Request, res: Response) => async (

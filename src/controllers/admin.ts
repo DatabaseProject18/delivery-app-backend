@@ -1,59 +1,55 @@
 import { Request, Response } from "express";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {
-  getUserDetails,
-  getUserFullDetails,
-  getUsersDetailsWithAccountStatus,
-} from "../models/user";
+import { enableUserAccount, disableUserAccount } from "../models/admin";
+import Joi from "joi";
 
-const userDetails = (): RHandler => {
-  const rHandlerData: RHandler = {
-    authSchema: {
-      hasAccessToken: true,
-    },
-    handlers: [
-      (req: Request, res: Response) => async (
-        data: ResponseResult
-      ): Promise<ResponseResult> => {
-        return await getUserDetails();
-      },
-    ],
-  };
-  return rHandlerData;
-};
-
-const userFullDetails = (): RHandler => {
-  const rHandlerData: RHandler = {
-    authSchema: {
-      hasAccessToken: true,
-    },
-    handlers: [
-      (req: Request, res: Response) => async (
-        data: ResponseResult
-      ): Promise<ResponseResult> => {
-        return await getUserFullDetails(+req.params.user_id);
-      },
-    ],
-  };
-  return rHandlerData;
-};
-
-const usersDetailsWithAccountStatus = (): RHandler => {
+const enableAccount = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
       hasAccessToken: true,
       userType: "admin",
     },
+    validateSchema: {
+      query: {
+        user: Joi.number().required(),
+      },
+    },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        return await getUsersDetailsWithAccountStatus();
+        return await enableUserAccount(
+          parseInt(req.query.user.toString())
+        );
       },
     ],
   };
   return rHandlerData;
 };
 
-export { userDetails, userFullDetails, usersDetailsWithAccountStatus };
+const disableAccount = (): RHandler => {
+  const rHandlerData: RHandler = {
+    authSchema: {
+      hasAccessToken: true,
+      userType: "admin",
+    },
+    validateSchema: {
+      query: {
+        user: Joi.number().required(),
+      },
+    },
+    handlers: [
+      (req: Request, res: Response) => async (
+        data: ResponseResult
+      ): Promise<ResponseResult> => {
+        return await disableUserAccount(
+          parseInt(req.query.user.toString())
+        );
+      },
+    ],
+  };
+  return rHandlerData;
+};
+
+export { enableAccount, disableAccount };

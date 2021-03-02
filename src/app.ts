@@ -13,6 +13,7 @@ import userRouter from './routes/user';
 import cartRouter from './routes/cart';
 import truckTripRouter from './routes/truckTrip';
 import reportRouter from './routes/report';
+import adminRouter from './routes/admin';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,6 +41,7 @@ app.use("/api/customer", CustomerRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/truckTrip",truckTripRouter);
 app.use("/api/report",reportRouter);
+app.use("/api/admin",adminRouter);
 
 const port = process.env.PORT || 3005;
 

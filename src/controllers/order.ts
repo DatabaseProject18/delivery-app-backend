@@ -61,9 +61,9 @@ const cancelOrder = (): RHandler => {
         data: ResponseResult
       ): Promise<ResponseResult> => {
         //const customer_id = 1; // this should be changed
-        //console.log(+req.params.order_id)
+        //console.log(req.body.orderDetails)
         //console.log(await deleteFromCart(customer_id,+req.params.order_id))
-        return await CancelAnOrder(+req.params.order_id);
+        return await CancelAnOrder(+req.body.order_id,req.body.orderDetails);
       },
     ],
   };
@@ -80,7 +80,7 @@ const confirmOrder = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        const customer_id = 1; // this should be changed
+        //const customer_id = 1; // this should be changed
         // console.log(+req.params.order_id)
         //console.log(await deleteFromCart(customer_id,+req.params.order_id))
         return await ConfirmAnOrder(+req.params.order_id);
@@ -118,7 +118,7 @@ const ordersByRouteId = (): RHandler => {
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        return await getOrdersByRouteId(req.body.town);
+        return await getOrdersByRouteId(+req.query.route_id);
       },
     ],
   };
@@ -147,7 +147,8 @@ const createOrder = (): RHandler => {
 const orderCountByStatus = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken:true
+      hasAccessToken:true,
+      userType:"company_manager",
     },
     handlers: [
       (req: Request, res: Response) => async (

@@ -422,3 +422,51 @@ DELIMITER ;
 	 		FROM order_table;
 	 END $$
 	 DELIMITER ;
+
+	 /*
+	 * Get count of search result
+	 */
+	 DROP PROCEDURE IF EXISTS get_search_result_count;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_search_result_count(
+		 name VARCHAR(255)
+	 )
+	 BEGIN
+			SELECT COUNT(*) AS count
+			FROM product
+			WHERE product_name LIKE CONCAT("%",name,"%");
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Get count of category search result
+	 */
+	 DROP PROCEDURE IF EXISTS get_category_search_result_count;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_category_search_result_count(
+		 name VARCHAR(255),
+		 category INT
+	 )
+	 BEGIN
+			SELECT COUNT(*) AS count
+			FROM product
+			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
+	 END $$
+	 DELIMITER ;
+
+
+ 	/*
+	 * update product stock after cancel order
+	 */
+	DROP PROCEDURE IF EXISTS update_product_stock;
+	 DELIMITER $$
+	 CREATE PROCEDURE update_product_stock(
+		 productID INT,
+		 quantity INT
+	 )
+	 BEGIN
+			UPDATE product
+			SET stock = stock + quantity
+			WHERE product_id = productID;
+	 END $$
+	 DELIMITER ;

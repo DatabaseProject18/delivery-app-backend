@@ -119,7 +119,7 @@ const update = (data: QueryData) => (obj: TransferObj): TransferObj => {
     Object.keys(data.update.values).map((key, index) => {
       if (index !== 0) obj.sql += `,`;
 
-      obj.sql += `?? = ?`;
+      obj.sql += `?? = ? `;
       obj.data.push(key);
       obj.data.push(data.update.values[key]);
     });

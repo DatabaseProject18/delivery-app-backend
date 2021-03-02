@@ -1,7 +1,7 @@
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverName = async (start_time: Date, end_time: Date): Promise<ResponseResult> => {
+const getDriverName = async (store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
@@ -45,7 +45,8 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
         select: ["first_name","last_name","driver_id"],
         from: "user_data",
         join: { "staff": "user_id", "driver": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver"}] 
+         operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "Driver"},{columnName: "store_id", comOperator: "=",value: store_id}] 
     }); 
 
     const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));

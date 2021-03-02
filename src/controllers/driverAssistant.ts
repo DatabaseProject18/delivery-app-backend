@@ -11,8 +11,14 @@ const driverAssistantName = (): RHandler => {
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult
-          ): Promise<ResponseResult> => {
-          return await getDriverAssistantName(req.body.start_time, req.body.end_time);
+        ): Promise<ResponseResult> => {
+          return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        },
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          //console.log(req.query)
+          return await getDriverAssistantName(data.data.multiple[0].store_id,String(req.query.start_time), String( req.query.end_time));
         },
       ],
     };

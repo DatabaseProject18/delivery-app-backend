@@ -67,4 +67,12 @@ const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseR
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder};
+const routeDetailsByRouteID = (truck_route_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["distance","average_time"],
+        from: "truck_route",
+        where: [{columnName: "truck_route_id", comOperator: "=", value: truck_route_id}] 
+    });
+}
+
+export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};
