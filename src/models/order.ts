@@ -79,23 +79,6 @@ const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
     });
 }
 
-const orderStatus = (user_id: number, order_id:number): Promise<ResponseResult> => {
-    return queryBuilder({
-        select: ["order_status"],
-        from: "order_table",
-        operator:"AND",
-        where:[{ columnName: "customer_id", comOperator: "=", value: user_id },{ columnName: "order_id", comOperator: "=", value: order_id }]
-    });
-}
-
-
-//   return queryBuilder({
-//     select: null,
-//     from: "new_order_details",
-//     where: [{ columnName: "order_id", comOperator: "=", value: order_id }],
-//   });
-// };
-
 // const rejectAnOrder = (order_id: number): Promise<ResponseResult> => {
 //   return queryBuilder({
 //     update: { tableName: "order_table", values: { order_status: "rejected" } },
