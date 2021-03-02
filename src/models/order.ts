@@ -19,6 +19,7 @@ const pastOrder = (
   return queryBuilder({
     select: [
       "order_id",
+      "product_id",
       "order_status",
       "cost",
       "order_date",
@@ -36,7 +37,12 @@ const pastOrder = (
   });
 };
 
-const CancelAnOrder = (order_id: number): Promise<ResponseResult> => {
+const CancelAnOrder = async (order_id: number, orderDetails: Array<{product_id:number,quantity:number}>): Promise<ResponseResult> => {
+  
+  orderDetails.map(async e  => {
+    await call("update_product_stock",[e.product_id,e.quantity]);
+  })
+  
   return queryBuilder({
     update: { tableName: "order_table", values: { order_status: "Canceled" } },
     where: [{ columnName: "order_id", comOperator: "=", value: order_id }],
