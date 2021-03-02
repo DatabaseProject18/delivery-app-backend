@@ -19,6 +19,7 @@ const getUserFullDetails = (user_id: number): Promise<ResponseResult> => {
 const getUsersDetailsWithAccountStatus = (): Promise<ResponseResult> => {
   return queryBuilder({
     select: [
+      "user_id",
       "first_name",
       "last_name",
       "user_data.email",
