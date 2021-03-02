@@ -72,7 +72,7 @@ CREATE TABLE truck_route(
         REFERENCES train_route(train_route_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-    
+
 );
 
 CREATE TABLE order_status(
@@ -99,17 +99,17 @@ CREATE TABLE order_table(
     delivery_date DATE NOT NULL,
     route_id INT,
     meet_position INT,
-    cost DECIMAL(12, 2) NOT NULL, 
+    cost DECIMAL(12, 2) DEFAULT 0, 
     order_status VARCHAR(10) DEFAULT "Preparing",
-    FOREIGN KEY (customer_id) 
+    FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (route_id) 
+    FOREIGN KEY (route_id)
         REFERENCES truck_route(truck_route_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (order_status) 
+    FOREIGN KEY (order_status)
         REFERENCES order_status(order_status)
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -128,14 +128,14 @@ CREATE TABLE payment(
     amount DECIMAL(12,2),
     payment_method VARCHAR(50),
     payment_date DATE,
-    FOREIGN KEY (order_id) 
+    FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-    FOREIGN KEY (payment_method) 
+    FOREIGN KEY (payment_method)
         REFERENCES payment_method(name)
         ON UPDATE CASCADE
-        ON DELETE CASCADE   
+        ON DELETE CASCADE
 );
 
 -- Product category table
@@ -161,7 +161,7 @@ CREATE TABLE product
         ON DELETE CASCADE
 );
 
---  Ordered product 
+--  Ordered product
 CREATE TABLE ordered_product(
     order_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -280,7 +280,7 @@ CREATE TABLE store_manager(
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE 
+        ON DELETE CASCADE
 );
 
 -- Driver Assistant
@@ -301,7 +301,7 @@ CREATE TABLE driver_assistant(
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE 
+        ON DELETE CASCADE
 );
 
 -- Driver
@@ -322,7 +322,7 @@ CREATE TABLE driver(
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE 
+        ON DELETE CASCADE
 );
 
 -- Truck Schedule
@@ -358,8 +358,8 @@ CREATE TABLE truck_schedule(
 
 -- Scheduled Order
 CREATE TABLE scheduled_order (
-    order_id INT, 
-    truck_schedule_id INT , 
+    order_id INT,
+    truck_schedule_id INT ,
     FOREIGN KEY (order_id)
         REFERENCES order_table(order_id)
         ON UPDATE CASCADE
@@ -394,7 +394,7 @@ CREATE TABLE user_contact_number(
 );
 
 
--- Company Manaager 
+-- Company Manaager
 CREATE TABLE company_manager(
     company_manager_id INT AUTO_INCREMENT PRIMARY KEY,
     staff_id INT,
@@ -417,7 +417,7 @@ CREATE TABLE admin(
     FOREIGN KEY (user_id)
         REFERENCES user_data(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE 
+        ON DELETE CASCADE
 );
 
 -- Rferesh token store
@@ -435,7 +435,7 @@ CREATE TABLE cart(
     FOREIGN KEY (customer_id)
         REFERENCES customer(customer_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE, 
+        ON DELETE CASCADE,
     FOREIGN KEY (product_id)
         REFERENCES product(product_id)
         ON UPDATE CASCADE

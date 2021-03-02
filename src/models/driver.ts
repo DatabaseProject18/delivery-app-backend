@@ -1,18 +1,20 @@
 import { queryBuilder } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverName = async (start_time: Date, end_time: Date): Promise<ResponseResult> => {
+const getDriverName = async (store_manager_id: number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
         operator: "AND",
-        where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }]   
+        where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }] 
     });
+    console.log(presentConsecutiveDrivers.data.multiple);
 
     const pastConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: "<=", value: start_time }],
+        operator: "AND",
+        where: [{ columnName: "date_time", comOperator: "<=", value: start_time },{columnName: "store_manager_id", comOperator: "=",value: store_manager_id}],
         order: {["date_time"]: "DESC"},
         limit: [1] 
     });
@@ -20,7 +22,8 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
     const futureConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: ">=", value: end_time }],
+        operator: "AND",
+        where: [{ columnName: "date_time", comOperator: ">=", value: end_time },{columnName: "store_manager_id", comOperator: "=",value: store_manager_id}],
         order: {["date_time"]: "ASC"},
         limit: [1] 
     });
@@ -41,13 +44,20 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
         busyDriverIds.push(futureConsecutiveDrivers.data.multiple[0])
     }
 
+    const getStoreIDByStoreManagerID = await queryBuilder({
+            select: ["store_id"],
+            from: "store_manager",
+            where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}] 
+    });
+    console.log(getStoreIDByStoreManagerID.data);
+
     const allDriverDetails = await queryBuilder({
-        select: ["first_name","last_name","driver_id"],
+        select: ["driver_id","first_name","last_name","email"],
         from: "user_data",
         join: { "staff": "user_id", "driver": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver"}] 
+        where: [{columnName: "store_id", comOperator: "=",value: getStoreIDByStoreManagerID.data.multiple[0].store_id}]
     }); 
-
+    //console.log(allDriverDetails.data);
     const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));
 
     allDriverDetails.data.multiple = freeDriverDetails;

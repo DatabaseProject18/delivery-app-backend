@@ -9,10 +9,15 @@ const driverName = (): RHandler => {
         hasAccessToken: true,
       },
       handlers: [
+        // (req: Request, res: Response) => async (
+        //   data: ResponseResult
+        // ): Promise<ResponseResult> => {
+        //   return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
+        // },
         (req: Request, res: Response) => async (
             data: ResponseResult
             ): Promise<ResponseResult> => {
-            return await getDriverName(req.body.start_time,req.body.end_time);
+            return await getDriverName(+req.query.store_manager_id,String( req.query.start_time),String( req.query.end_time));
           },
       ],
     };
