@@ -17,7 +17,7 @@ const driverName = (): RHandler => {
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          console.log(req.query)
+          
             return await getDriverName(data.data.multiple[0].store_id,String( req.query.start_time),String( req.query.end_time));
           },
       ],
