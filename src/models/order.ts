@@ -73,20 +73,28 @@ const newOrder = (order_id: number): Promise<ResponseResult> => {
 
 const rejectAnOrder = (order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
-        update: { tableName: 'order_table', values: { "order_status": "rejected" } },
+        update: { tableName: 'order_table', values: { "order_status": "Canceled" } },
         where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
     });
 }
 
 const shipAnOrder = (order_id:number): Promise<ResponseResult> => {
     return queryBuilder({
-        update: { tableName: 'order_table', values: { "order_status": "shipped" } },
+        update: { tableName: 'order_table', values: { "order_status": "Sent" } },
         where:[{ columnName: "order_id", comOperator: "=", value: order_id }]
     });
 }
 
+const getTrainsForOrder = (order_id:number): Promise<ResponseResult> => {
+    return call("supply_chain_management_db.get_trains_for_order", [order_id])
+};
+
 const getTotalVolumeForOrder = (order_id:number): Promise<ResponseResult> => {
     return call("supply_chain_management_db.get_total_volume", [order_id]);
+};
+
+const getTrainTimeTableForOrder = (train_Id:number): Promise<ResponseResult> => {
+    return call("supply_chain_management_db.train_time_table", [train_Id]);
 };
 
 
@@ -142,4 +150,6 @@ export {
   shipAnOrder,
   getOrdersCountByStatus,
   getTotalVolumeForOrder,
+  getTrainsForOrder,
+  getTrainTimeTableForOrder,
 };

@@ -475,6 +475,46 @@ DELIMITER ;
 	 /*
 	 * Search by product name and filter by category
 	 */
+
+    DROP PROCEDURE IF EXISTS get_total_volume;
+    DELIMITER $$
+    CREATE PROCEDURE get_total_volume(
+        order_id DECIMAL
+    )
+    BEGIN
+            SELECT supply_chain_management_db.get_total_volume_of_order(order_id);
+    END $$
+    DELIMITER ;
+
+    /*
+         * Get trains of an order
+         */
+    DROP PROCEDURE IF EXISTS get_trains_for_order;
+    DELIMITER $$
+    CREATE PROCEDURE get_trains_for_order(
+        order_id DECIMAL
+    )
+    BEGIN
+    SELECT t.train_name, train_id
+    FROM order_table ot, truck_route tr, train t
+    WHERE ot.order_id = order_id AND
+            ot.route_id = tr.truck_route_id AND
+            tr.train_route_id = t.train_route_id;
+    END $$
+    DELIMITER ;
+
+    DROP PROCEDURE IF EXISTS train_time_table;
+    DELIMITER $$
+    CREATE PROCEDURE train_time_table(
+        train_id DECIMAL
+    )
+    BEGIN
+    SELECT CONCAT( day,' from ',start_time,' - ', finish_time) as train_time, train_time_table_id
+    FROM train_time_table ttt
+    WHERE ttt.train_id = train_id;
+    END $$
+    DELIMITER ;
+
 	 DROP PROCEDURE IF EXISTS get_result_of_search_by_product_name_filter_by_category;
 	 DELIMITER $$
 	 CREATE PROCEDURE get_result_of_search_by_product_name_filter_by_category(
@@ -490,6 +530,7 @@ DELIMITER ;
 			LIMIT offsetNo,numOfItem;
 	 END $$
 	 DELIMITER ;
+
 
 
 
