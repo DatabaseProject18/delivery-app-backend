@@ -1,4 +1,4 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder,call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
 
@@ -7,7 +7,7 @@ const getTruckRouteIds = (store_manager_id: number): Promise<ResponseResult> => 
         select: ["truck_route_id"],
         from: "truck_schedule",
         where: [{ columnName: "store_manager_id", comOperator: "=", value: store_manager_id }]
-        
+
     });
 }
 
@@ -28,15 +28,19 @@ const getTruckId = (store_id: number): Promise<ResponseResult> => {
     });
 }
 
-const createTruckTrip = (req: Object): Promise<ResponseResult> => {
-    console.log(req);
-    return queryBuilder({
-        insert: {
-            tableName: "truck_schedule",
-            columns: ["truck_route_id","truck_id","date_time","store_manager_id","driver_id","driver_assistant_id"],
-            values: [Object.values(req)],
-        }
-    });
+// const createTruckTrip = (req: Object): Promise<ResponseResult> => {
+//     console.log(req);
+//     return queryBuilder({
+//         insert: {
+//             tableName: "truck_schedule",
+//             columns: ["truck_route_id","truck_id","date_time","store_manager_id","driver_id","driver_assistant_id"],
+//             values: [Object.values(req)],
+//         }
+//     });
+// }
+
+const createTruckTrip = (data: Object): Promise<ResponseResult> => {
+    return call("insert_new_truck_trip",[JSON.stringify(data)]);
 }
 
 const createScheduledOrder = (req: Object): Promise<ResponseResult> => {
@@ -57,13 +61,13 @@ const truckRouteByID = (truck_route_id: number): Promise<ResponseResult> => {
         where: [{ columnName: "truck_route_id", comOperator: "=", value: truck_route_id }],
         order: {["meet_position"]: "ASC"}
     });
-    
+
 }
 const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["store_id"],
         from: "store_manager",
-        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}] 
+        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}]
     });
 }
 

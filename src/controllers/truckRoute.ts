@@ -8,7 +8,6 @@ import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByS
 const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
-
         hasAccessToken: true,
       },
       handlers: [
@@ -57,12 +56,14 @@ const truckRoutes = (): RHandler => {
       },
       validateSchema: {
         body: {
-          truck_route_id: Joi.number().min(1).required(),
-          truck_id: Joi.number().min(1).required(),
-          date_time: Joi.date().iso().required(),
-          store_manager_id: Joi.number().min(1).required(),
-          driver_id: Joi.number().min(1).required(),
-          driver_assistant_id: Joi.number().min(1).required(),
+          truckRouteId: Joi.number().min(1).required(),
+          truckId: Joi.number().min(1).required(),
+          dateTime: Joi.date().iso().required(),
+          storeManagerId: Joi.number().min(1).required(),
+          driverId: Joi.number().min(1).required(),
+          driverAssistantId: Joi.number().min(1).required(),
+          orderIds: Joi.array().required(),
+          numOfOrders: Joi.number().min(1).required(),
         },
       },
       handlers: [
@@ -73,7 +74,7 @@ const truckRoutes = (): RHandler => {
         },
       ],
     };
-  
+
     return rHandlerData;
 };
 
@@ -99,7 +100,7 @@ const scheduledOrder = (): RHandler => {
 
   return rHandlerData;
 };
-  
+
   const getTruckRouteByID = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
@@ -117,6 +118,6 @@ const scheduledOrder = (): RHandler => {
     };
     return rHandlerData;
   };
-  
+
 
 export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder}
