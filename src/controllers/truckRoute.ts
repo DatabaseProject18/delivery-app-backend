@@ -55,16 +55,16 @@ const truckRoutes = (): RHandler => {
         hasAccessToken: true,
       },
       
-      validateSchema: {
-        body: {
-          truck_route_id: Joi.number().min(1).required(),
-          truck_id: Joi.number().min(1).required(),
-          date_time: Joi.date().iso().required(),
-          store_manager_id: Joi.number().min(1).required(),
-          driver_id: Joi.number().min(1).required(),
-          driver_assistant_id: Joi.number().min(1).required(),
-        },
-      },
+       validateSchema: {
+         body: {
+           truck_route_id: Joi.number().min(1).required(),
+           truck_id: Joi.number().min(1).required(),
+           date_time: Joi.date().iso().required(),
+           store_manager_id: Joi.number().min(1).required(),
+           driver_id: Joi.number().min(1).required(),
+           driver_assistant_id: Joi.number().min(1).required(),
+         },
+       },
       handlers: [
         (req: Request, res: Response) => async (
           data: ResponseResult

@@ -492,18 +492,6 @@ DELIMITER ;
 	 DELIMITER ;
 
 
-    /*
-	 * Get total volume of an order
-	 */
-    DROP PROCEDURE IF EXISTS get_total_volume;
-    DELIMITER $$
-    CREATE PROCEDURE get_total_volume(
-        order_id DECIMAL
-    )
-    BEGIN
-            SELECT supply_chain_management_db.get_total_volume_of_order(order_id)
-    END $$
-    DELIMITER ;
 
 
  	/*
@@ -602,32 +590,35 @@ DROP PROCEDURE IF EXISTS insert_new_order;
 	 END $$
 	 DELIMITER ;
 
+
 	/*
-	 * add truck shedule 
+	 * add truck trip 
 	 */
 
-	DROP PROCEDURE IF EXISTS insert_truck_trip;
-DELIMITER $$
-CREATE PROCEDURE insert_truck_trip(
-	truckScheduleId int(11),
-    truckId int(11)
-    dateTime Date,
-    storeManagerId int(11),
-    driverId int(11),
-    driverAssistantId int(11),
-	orderIds int(11)
-    
-)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-	START TRANSACTION;
-		INSERT INTO truck_schedule(truck_route_id,truck_id,date_time,store_manager_id,driver_id,driver_assistant_id) VALUES (truckScheduleId,truckId,dateTime,storeManagerId,driverId,driverAssistantId);
-		INSERT INTO user_account(truck_schedule_id,order_id) VALUES (LAST_INSERT_ID(),orderIds);
-    COMMIT;
-END $$
-DELIMITER ;
+
+DROP PROCEDURE IF EXISTS insert_new_truck_trip;
+	 DELIMITER $$
+	 CREATE PROCEDURE insert_new_truck_trip(
+		 trip_data JSON
+	 )
+	 BEGIN
+		 DECLARE count INT;
+	     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	     BEGIN
+	         ROLLBACK;
+	         RESIGNAL;
+	     END;
+         SET count = 0;
+	 	START TRANSACTION;
+	 		INSERT INTO truck_schedule(truck_route_id,truck_id,date_time,store_manager_id,driver_id,driver_assistant_id)
+            VALUES (trip_data->"$.truckRouteId",trip_data->"$.truckId",trip_data->"$.dateTime",trip_data->"$.storeManagerId",trip_data->"$.driverId",trip_data->"$.driverAssistantId");
+            
+            WHILE count < trip_data->"$.numOfOrders" DO
+				   INSERT INTO scheduled_order(order_id,truck_schedule_id) 
+                VALUES (JSON_EXTRACT(trip_data,CONCAT("$.orderIds[",count,"]")),LAST_INSERT_ID());
+				SET count = count + 1;
+            END WHILE;
+	     COMMIT;
+	 END $$
+	 DELIMITER ;
 
