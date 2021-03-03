@@ -76,4 +76,11 @@ const routeDetailsByRouteID = (truck_route_id: number): Promise<ResponseResult> 
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};
+const Routes = (): Promise<ResponseResult> => {
+    return queryBuilder({
+      select: null,
+      from: "routes",
+    });
+};
+
+export {Routes,getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};
