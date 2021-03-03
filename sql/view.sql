@@ -122,3 +122,16 @@ WHERE order_status = "Sent"
 	AND order_id NOT IN
 		(SELECT order_id 
 		 FROM scheduled_order);
+
+
+
+
+DROP VIEW IF EXISTS routes;
+CREATE VIEW routes AS
+SELECT 
+	tr.truck_route_id,
+	get_first_meet_town_of_route(truck_route_id) start_city,
+    get_last_meet_town_of_route(truck_route_id) destination_city,
+    (SELECT GROUP_CONCAT(town SEPARATOR ',') FROM covered_area ca WHERE ca.truck_route_id = tr.truck_route_id) route,
+    (SELECT GROUP_CONCAT(meet_position SEPARATOR ',') FROM covered_area ca WHERE ca.truck_route_id = tr.truck_route_id) meet_order
+FROM truck_route  tr;

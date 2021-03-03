@@ -434,7 +434,7 @@ DELIMITER ;
 	 BEGIN
 			SELECT COUNT(*) AS count
 			FROM product
-			WHERE product_name LIKE CONCAT("%",name,"%");
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE);
 	 END $$
 	 DELIMITER ;
 
@@ -450,7 +450,44 @@ DELIMITER ;
 	 BEGIN
 			SELECT COUNT(*) AS count
 			FROM product
-			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE) AND category_id = category;
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Search by product name
+	 */
+	 DROP PROCEDURE IF EXISTS get_result_of_search_by_product_name;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_result_of_search_by_product_name(
+		 name VARCHAR(1000),
+		 offsetNo INT,
+		 numOfItem INT
+	 )
+	 BEGIN
+			SELECT product_id,product_name, unit_price, product_description, discount
+			FROM product
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE)
+			LIMIT offsetNo,numOfItem;
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Search by product name and filter by category
+	 */
+	 DROP PROCEDURE IF EXISTS get_result_of_search_by_product_name_filter_by_category;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_result_of_search_by_product_name_filter_by_category(
+		 name VARCHAR(1000),
+		 offsetNo INT,
+		 numOfItem INT,
+		 category INT
+	 )
+	 BEGIN
+			SELECT product_id,product_name, unit_price, product_description, discount
+			FROM product
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE) AND category_id = category
+			LIMIT offsetNo,numOfItem;
 	 END $$
 	 DELIMITER ;
 
@@ -496,6 +533,41 @@ DELIMITER ;
 	 END $$
 	 DELIMITER ;
 
+
+
+DROP PROCEDURE IF EXISTS insert_new_order;
+	 DELIMITER $$
+	 CREATE PROCEDURE insert_new_order(
+		 order_data JSON
+	 )
+	 BEGIN
+		 DECLARE count INT;
+	     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	     BEGIN
+	         ROLLBACK;
+	         RESIGNAL;
+	     END;
+         SET count = 0;
+	 	START TRANSACTION;
+	 		INSERT INTO order_table(customer_id,order_date,delivery_date,route_id,meet_position) 
+            VALUES (order_data->"$.customerId",order_data->"$.orderDate",order_data->"$.deliveryDate",order_data->"$.routeId",order_data->"$.meetPosition");
+            
+            UPDATE cart 
+			SET is_delete = 1 
+			WHERE customer_id = order_data->"$.customerId"  AND is_delete = 0;
+				
+            WHILE count < order_data->"$.numOfProducts" DO
+				
+                INSERT INTO ordered_product(order_id,product_id,quantity,item_price) 
+                VALUES (LAST_INSERT_ID(),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].productId")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].quantity")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].itemPrice")));
+				SET count = count + 1;
+            END WHILE;
+            
+			INSERT INTO payment(order_id,amount,payment_method,payment_date) VALUES (LAST_INSERT_ID(),order_data->"$.cost",order_data->>"$.paymentMethod",order_data->"$.orderDate");
+	     COMMIT;
+	 END $$
+	 DELIMITER ;
+
 	/*
 	 * get the driver assistant ids who are exceeding total working hours
 	 */
@@ -523,6 +595,7 @@ DELIMITER ;
 	 * add truck trip 
 	 */
 
+
 DROP PROCEDURE IF EXISTS insert_new_truck_trip;
 	 DELIMITER $$
 	 CREATE PROCEDURE insert_new_truck_trip(
@@ -548,3 +621,4 @@ DROP PROCEDURE IF EXISTS insert_new_truck_trip;
 	     COMMIT;
 	 END $$
 	 DELIMITER ;
+
