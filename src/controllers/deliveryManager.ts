@@ -1,13 +1,24 @@
 import { Request, Response } from "express";
 import Joi from "joi";
+import {schedule_train} from "../models/train_schedule";
 import { queryBuilder } from "../utils/db/database";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {newOrders, newOrder, rejectAnOrder, shipAnOrder, getTotalVolumeForOrder} from "../models/order";
+import {
+    newOrders,
+    newOrder,
+    rejectAnOrder,
+    shipAnOrder,
+    getTotalVolumeForOrder,
+    getTrainsForOrder,
+    getTrainTimeTableForOrder,
+} from "../models/order";
 
 const getNewOrders = (): RHandler => {
     const rHandlerData: RHandler = {
         authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -23,6 +34,8 @@ const getNewOrders = (): RHandler => {
 const getNewOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -38,6 +51,8 @@ const getNewOrder = (): RHandler => {
 const rejectOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -53,6 +68,8 @@ const rejectOrder = (): RHandler => {
 const shipOrder = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -68,6 +85,8 @@ const shipOrder = (): RHandler => {
 const getTotalVolume = (): RHandler => {
     const rHandlerData: RHandler ={
         authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
         },
         handlers: [
             (req: Request, res: Response) => async (
@@ -80,4 +99,55 @@ const getTotalVolume = (): RHandler => {
     return rHandlerData;
 };
 
-export {getNewOrders, getNewOrder, rejectOrder, shipOrder, getTotalVolume}
+const getAllTrainsForOrder = (): RHandler => {
+    const rHandlerData: RHandler ={
+        authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
+        },
+        handlers: [
+            (req: Request, res: Response) => async (
+                data: ResponseResult
+            ): Promise<ResponseResult> => {
+                return await getTrainsForOrder(+req.params.order_id);
+            }
+        ],
+    };
+    return rHandlerData;
+};
+
+const getTrainTimeTableForTrainId = (): RHandler => {
+    const rHandlerData: RHandler ={
+        authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
+        },
+        handlers: [
+            (req: Request, res: Response) => async (
+                data: ResponseResult
+            ): Promise<ResponseResult> => {
+                return await getTrainTimeTableForOrder(+req.params.train_id);
+            }
+        ],
+    };
+    return rHandlerData;
+};
+
+const scheduleTrainTrip = (): RHandler => {
+    const rHandlerData: RHandler ={
+        authSchema: {
+            hasAccessToken: true,
+            userType: "delivery_manager"
+        },
+        handlers: [
+            (req: Request, res: Response) => async (
+                data: ResponseResult
+            ): Promise<ResponseResult> => {
+                return await schedule_train(+req.params.order_id, +req.params.train_time_table_id, +req.params.delivery_manager_id);
+            }
+        ],
+    };
+    return rHandlerData;
+};
+
+export {getNewOrders, getNewOrder, rejectOrder, shipOrder, getTotalVolume, getAllTrainsForOrder, getTrainTimeTableForTrainId, scheduleTrainTrip}
