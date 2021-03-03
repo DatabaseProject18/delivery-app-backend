@@ -18,7 +18,7 @@ const driverAssistantName = (): RHandler => {
           data: ResponseResult
         ): Promise<ResponseResult> => {
           //console.log(req.query)
-          return await getDriverAssistantName(data.data.multiple[0].store_id,String(req.query.start_time), String( req.query.end_time));
+          return await getDriverAssistantName(+req.query.truck_route_id,data.data.multiple[0].store_id,String(req.query.start_time), String( req.query.end_time));
         },
       ],
     };

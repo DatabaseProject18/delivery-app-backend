@@ -52,8 +52,16 @@ const getDriverName = async (truck_route_id: number, store_id: number,start_time
 
     const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));
     const getDriversByWorkingHours = await call("get_drivers_who_are_exceeding_total_hours",[truck_route_id,start_time]);
-    const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
-    allDriverDetails.data.multiple = workingDrivers;  
+    //console.log(getDriversByWorkingHours.data.multiple);
+    //console.log(getDriversByWorkingHours.error);
+    if(getDriversByWorkingHours.error){
+        allDriverDetails.data.multiple = freeDriverDetails;
+    }else{
+        const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
+        allDriverDetails.data.multiple = workingDrivers;
+    }
+    //const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
+    //allDriverDetails.data.multiple = workingDrivers;  
     //allDriverDetails.data.multiple = freeDriverDetails;
     
     
