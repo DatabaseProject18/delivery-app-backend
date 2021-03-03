@@ -237,10 +237,22 @@ export const call = (
   name: string,
   args: Array<any> = []
 ): Promise<ResponseResult> => {
+  let sql = "CALL ??(";
+
+  args.map((item,index)=>{
+    if (index === 0){
+      sql = sql + "?";
+    }else{
+      sql = sql + ",?";
+    }
+  })
+
+  sql = sql + ")";
+
   return new Promise((resolve) => {
     connect();
 
-    connection.query(`CALL ??(?)`, [name, args], (error, result, field) => {
+    connection.query(sql, [name, ...args], (error, result, field) => {
       if (result){
         result = result[0];
       }

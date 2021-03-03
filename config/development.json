@@ -1,8 +1,10 @@
 {
-    "database": {
-        "host": "localhost",
-        "user": "root",
-        "password": "",
-        "name": "supply_chain_management_db"
-    }
+
+  "database": {
+    "host": "localhost",
+    "user": "root",
+    "password": "1234",
+    "name": "supply_chain_management_db"
+  }
 }
+

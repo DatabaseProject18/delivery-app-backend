@@ -1,4 +1,4 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
 
@@ -28,24 +28,29 @@ const getTruckId = (store_id: number): Promise<ResponseResult> => {
     });
 }
 
-const createTruckTrip = (req: Object): Promise<ResponseResult> => {
-    console.log(req);
-    return queryBuilder({
-        insert: {
-            tableName: "truck_schedule",
-            columns: ["truck_route_id","truck_id","date_time","store_manager_id","driver_id","driver_assistant_id"],
-            values: [Object.values(req)],
-        }
-    });
-}
+  const createTruckTrip = (req: Object): Promise<ResponseResult> => {
+     //console.log(req);
+      return queryBuilder({
+          insert: {
+              tableName: "truck_schedule",
+             columns: ["truck_route_id","truck_id","date_time","store_manager_id","driver_id","driver_assistant_id"],
+              values: [Object.values(req)],
+            
+          }
+      });
+  }
+
+//  const createTruckTrip = (req: Object): Promise<ResponseResult> => {
+//      return call("insert_new_truck_trip", [JSON.stringify( JSON.stringify(req)).replace(/\\/g,"").replace('"{',"{").replace('}"',"}")]);
+//    };
 
 const createScheduledOrder = (req: Object): Promise<ResponseResult> => {
-    console.log(req);
+    console.log(Object.values(req));
     return queryBuilder({
         insert: {
             tableName: "scheduled_order",
             columns: ["order_id","truck_schedule_id"],
-            values: Object.values(req),
+            values: Object.values(req)[0],
         }
     });
 }
@@ -75,4 +80,11 @@ const routeDetailsByRouteID = (truck_route_id: number): Promise<ResponseResult> 
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};
+const Routes = (): Promise<ResponseResult> => {
+    return queryBuilder({
+      select: null,
+      from: "routes",
+    });
+};
+
+export {Routes,getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};

@@ -12,13 +12,14 @@ const driverName = (): RHandler => {
         (req: Request, res: Response) => async (
           data: ResponseResult
         ): Promise<ResponseResult> => {
+          console.log(req.query);
           return await getStoreIDByStoreManagerID(+req.query.store_manager_id);
         },
         (req: Request, res: Response) => async (
           data: ResponseResult
           ): Promise<ResponseResult> => {
-          
-            return await getDriverName(data.data.multiple[0].store_id,String( req.query.start_time),String( req.query.end_time));
+            console.log(req.query);
+            return await getDriverName(+req.query.truck_route_id,data.data.multiple[0].store_id,String( req.query.start_time),String( req.query.end_time));
           },
       ],
     };

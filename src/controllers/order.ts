@@ -128,16 +128,15 @@ const ordersByRouteId = (): RHandler => {
 const createOrder = (): RHandler => {
   const rHandlerData: RHandler = {
     authSchema: {
-      hasAccessToken: false,
-      userType: "customer",
+       hasAccessToken: false,
+       userType: "customer",
     },
     handlers: [
       (req: Request, res: Response) => async (
         data: ResponseResult
       ): Promise<ResponseResult> => {
-        const customer_id = 1000; // this should be changed
-        console.log("Order successfully created");
-        return await CreateAnOrder(customer_id);
+        //console.log(req.body);
+        return await CreateAnOrder(req.body);
       },
     ],
   };
