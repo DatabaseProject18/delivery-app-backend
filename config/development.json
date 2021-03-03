@@ -1,4 +1,5 @@
 {
+
   "database": {
     "host": "localhost",
     "user": "root",
@@ -6,3 +7,4 @@
     "name": "supply_chain_management_db"
   }
 }
+

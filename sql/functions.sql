@@ -43,3 +43,24 @@ BEGIN
     RETURN last_meet;
 END $$
 DELIMITER ;
+
+
+DROP FUNCTION IF EXISTS get_total_volume_of_order;
+DELIMITER $$
+CREATE FUNCTION get_total_volume_of_order(
+    ord_id INT
+)
+RETURNS VARCHAR(100)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE total_vol DECIMAL;
+
+    SELECT SUM(product_volume) INTO total_vol
+    FROM new_single_order_details
+    WHERE order_id = ord_id;
+
+    RETURN total_vol;
+END $$
+DELIMITER ;
+
