@@ -39,18 +39,11 @@ const getSearchByProductName = (
   offset: number,
   name: string
 ): Promise<ResponseResult> => {
-  return queryBuilder({
-    select: ["product_id","product_name", "unit_price", "product_description", "discount"],
-    from: "product",
-    where: [
-      {
-        columnName: "product_name",
-        comOperator: "like",
-        value: `%${name}%`,
-      },
-    ],
-    limit: [offset, config.get("items_per_page")],
-  });
+  return call("get_result_of_search_by_product_name", [
+    name,
+    offset,
+    config.get("items_per_page"),
+  ]);
 };
 
 const getSearchByProductNameFilterCategory = (
@@ -58,24 +51,12 @@ const getSearchByProductNameFilterCategory = (
   offset: number,
   name: string
 ): Promise<ResponseResult> => {
-  return queryBuilder({
-    select: ["product_id","product_name", "unit_price", "product_description", "discount"],
-    from: "product",
-    where: [
-      {
-        columnName: "product_name",
-        comOperator: "like",
-        value: `%${name}%`,
-      },
-      {
-        columnName: "category_id",
-        comOperator: "=",
-        value: category,
-      },
-    ],
-    operator: "and",
-    limit: [offset, config.get("items_per_page")],
-  });
+  return call("get_result_of_search_by_product_name_filter_by_category", [
+    name,
+    offset,
+    config.get("items_per_page"),
+    category,
+  ]);
 };
 
 const getAllCategories = (): Promise<ResponseResult> => {
