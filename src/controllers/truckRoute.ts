@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID} from '../models/truckRoute';
+import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID,Routes} from '../models/truckRoute';
 
 
 const truckRoutes = (): RHandler => {
@@ -135,4 +135,20 @@ const scheduledOrder = (): RHandler => {
     return rHandlerData;
   };
 
-export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder,getRouteDetailsByRouteID}
+    const getRoute = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        //hasAccessToken: true,
+        //userType: "customer",
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await Routes();
+        },
+      ],
+    };
+    return rHandlerData;
+  };
+export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder,getRouteDetailsByRouteID,getRoute}

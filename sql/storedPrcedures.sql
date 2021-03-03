@@ -508,3 +508,37 @@ DELIMITER ;
 	 END $$
 	 DELIMITER ;
 
+
+
+DROP PROCEDURE IF EXISTS insert_new_order;
+	 DELIMITER $$
+	 CREATE PROCEDURE insert_new_order(
+		 order_data JSON
+	 )
+	 BEGIN
+		 DECLARE count INT;
+	     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	     BEGIN
+	         ROLLBACK;
+	         RESIGNAL;
+	     END;
+         SET count = 0;
+	 	START TRANSACTION;
+	 		INSERT INTO order_table(customer_id,order_date,delivery_date,route_id,meet_position) 
+            VALUES (order_data->"$.customerId",order_data->"$.orderDate",order_data->"$.deliveryDate",order_data->"$.routeId",order_data->"$.meetPosition");
+            
+            UPDATE cart 
+			SET is_delete = 1 
+			WHERE customer_id = order_data->"$.customerId"  AND is_delete = 0;
+				
+            WHILE count < order_data->"$.numOfProducts" DO
+				
+                INSERT INTO ordered_product(order_id,product_id,quantity,item_price) 
+                VALUES (LAST_INSERT_ID(),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].productId")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].quantity")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].itemPrice")));
+				SET count = count + 1;
+            END WHILE;
+            
+			INSERT INTO payment(order_id,amount,payment_method,payment_date) VALUES (LAST_INSERT_ID(),order_data->"$.cost",order_data->>"$.paymentMethod",order_data->"$.orderDate");
+	     COMMIT;
+	 END $$
+	 DELIMITER ;
