@@ -434,7 +434,7 @@ DELIMITER ;
 	 BEGIN
 			SELECT COUNT(*) AS count
 			FROM product
-			WHERE product_name LIKE CONCAT("%",name,"%");
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE);
 	 END $$
 	 DELIMITER ;
 
@@ -450,7 +450,44 @@ DELIMITER ;
 	 BEGIN
 			SELECT COUNT(*) AS count
 			FROM product
-			WHERE product_name LIKE CONCAT("%",name,"%") AND category_id = category;
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE) AND category_id = category;
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Search by product name
+	 */
+	 DROP PROCEDURE IF EXISTS get_result_of_search_by_product_name;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_result_of_search_by_product_name(
+		 name VARCHAR(1000),
+		 offsetNo INT,
+		 numOfItem INT
+	 )
+	 BEGIN
+			SELECT product_id,product_name, unit_price, product_description, discount
+			FROM product
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE)
+			LIMIT offsetNo,numOfItem;
+	 END $$
+	 DELIMITER ;
+
+	 /*
+	 * Search by product name and filter by category
+	 */
+	 DROP PROCEDURE IF EXISTS get_result_of_search_by_product_name_filter_by_category;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_result_of_search_by_product_name_filter_by_category(
+		 name VARCHAR(1000),
+		 offsetNo INT,
+		 numOfItem INT,
+		 category INT
+	 )
+	 BEGIN
+			SELECT product_id,product_name, unit_price, product_description, discount
+			FROM product
+			WHERE MATCH(product_name) AGAINST(name IN BOOLEAN MODE) AND category_id = category
+			LIMIT offsetNo,numOfItem;
 	 END $$
 	 DELIMITER ;
 
