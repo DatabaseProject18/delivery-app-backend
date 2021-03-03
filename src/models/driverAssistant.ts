@@ -1,7 +1,7 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverAssistantName = async (store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
+const getDriverAssistantName = async (truck_route_id: number,store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
@@ -55,8 +55,16 @@ const getDriverAssistantName = async (store_id:number,start_time: string, end_ti
 
 
     const freeDriverAssistantDetails = allDriverAssistantDetails.data.multiple.filter((elem) => !busyDriverAssistantIds.find(({ driver_assistant_id }) => elem.driver_assistant_id === driver_assistant_id));
-    
-    allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
+    const getDriverAssistantsByWorkingHours = await call("get_driver_assistants_who_are_exceeding_total_hours",[truck_route_id,start_time]);
+    //console.log(getDriversByWorkingHours.data.multiple);
+    //console.log(getDriverAssistantsByWorkingHours.error);
+    if(getDriverAssistantsByWorkingHours.error){
+        allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
+    }else{
+        const workingDrivers = freeDriverAssistantDetails.filter((elem) => !getDriverAssistantsByWorkingHours.data.multiple.find(({ driver_assistant_id}) => elem.driver_assistant_id === driver_assistant_id));
+        allDriverAssistantDetails.data.multiple = workingDrivers;
+    }
+    //allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
     return allDriverAssistantDetails;    
 }
 

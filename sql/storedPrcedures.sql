@@ -542,3 +542,55 @@ DROP PROCEDURE IF EXISTS insert_new_order;
 	     COMMIT;
 	 END $$
 	 DELIMITER ;
+
+	/*
+	 * get the driver assistant ids who are exceeding total working hours
+	 */
+
+	DROP PROCEDURE IF EXISTS get_driver_assistants_who_are_exceeding_total_hours;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_driver_assistants_who_are_exceeding_total_hours(
+		 route_id INT,
+		 create_date DATE
+	 )
+	 BEGIN
+				SELECT driver_assistant_id FROM
+				(SELECT driver_assistant_id,total_work_hours,(SUM(average_time)+(SELECT average_time FROM truck_route WHERE truck_route_id = route_id)) AS tot_avg_time
+				FROM truck_schedule ts 
+				JOIN truck_route tr USING(truck_route_id)
+				JOIN driver_assistant d USING(driver_assistant_id)
+				WHERE MONTH(create_date) = MONTH(ts.date_time)
+				GROUP BY driver_assistant_id,total_work_hours
+				HAVING tot_avg_time > total_work_hours) AS new_table1;
+	 END $$
+	 DELIMITER ;
+
+	/*
+	 * add truck shedule 
+	 */
+
+	DROP PROCEDURE IF EXISTS insert_truck_trip;
+DELIMITER $$
+CREATE PROCEDURE insert_truck_trip(
+	truckScheduleId int(11),
+    truckId int(11)
+    dateTime Date,
+    storeManagerId int(11),
+    driverId int(11),
+    driverAssistantId int(11),
+	orderIds int(11)
+    
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+	START TRANSACTION;
+		INSERT INTO truck_schedule(truck_route_id,truck_id,date_time,store_manager_id,driver_id,driver_assistant_id) VALUES (truckScheduleId,truckId,dateTime,storeManagerId,driverId,driverAssistantId);
+		INSERT INTO user_account(truck_schedule_id,order_id) VALUES (LAST_INSERT_ID(),orderIds);
+    COMMIT;
+END $$
+DELIMITER ;
+

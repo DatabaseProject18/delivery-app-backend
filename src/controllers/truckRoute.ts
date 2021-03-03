@@ -53,8 +53,8 @@ const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
+      
       validateSchema: {
         body: {
           truck_route_id: Joi.number().min(1).required(),
@@ -69,7 +69,10 @@ const truckRoutes = (): RHandler => {
         (req: Request, res: Response) => async (
           data: ResponseResult
         ): Promise<ResponseResult> => {
-          return await createTruckTrip(req.body)
+          
+          return await createTruckTrip(
+            req.body
+          );
         },
       ],
     };
