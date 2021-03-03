@@ -1,4 +1,4 @@
-import { queryBuilder,call } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
 
@@ -44,12 +44,12 @@ const createTruckTrip = (data: Object): Promise<ResponseResult> => {
 }
 
 const createScheduledOrder = (req: Object): Promise<ResponseResult> => {
-    console.log(req);
+    console.log(Object.values(req));
     return queryBuilder({
         insert: {
             tableName: "scheduled_order",
             columns: ["order_id","truck_schedule_id"],
-            values: Object.values(req),
+            values: Object.values(req)[0],
         }
     });
 }
@@ -71,4 +71,19 @@ const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseR
     });
 }
 
-export {getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder};
+const routeDetailsByRouteID = (truck_route_id: number): Promise<ResponseResult> => {
+    return queryBuilder({
+        select: ["distance","average_time"],
+        from: "truck_route",
+        where: [{columnName: "truck_route_id", comOperator: "=", value: truck_route_id}]
+    });
+}
+
+const Routes = (): Promise<ResponseResult> => {
+    return queryBuilder({
+      select: null,
+      from: "routes",
+    });
+};
+
+export {Routes,getTruckRouteIds, getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID};

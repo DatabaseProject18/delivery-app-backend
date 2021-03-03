@@ -1,7 +1,8 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
+//import _ from "lodash";
 
-const getDriverName = async (start_time: Date, end_time: Date): Promise<ResponseResult> => {
+const getDriverName = async (truck_route_id: number, store_id: number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
@@ -45,12 +46,26 @@ const getDriverName = async (start_time: Date, end_time: Date): Promise<Response
         select: ["first_name","last_name","driver_id"],
         from: "user_data",
         join: { "staff": "user_id", "driver": "staff_id" },
-        where: [{columnName: "user_type", comOperator: "=",value: "Driver"}] 
+         operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "Driver"},{columnName: "store_id", comOperator: "=",value: store_id}] 
     }); 
 
     const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));
+    const getDriversByWorkingHours = await call("get_drivers_who_are_exceeding_total_hours",[truck_route_id,start_time]);
+    //console.log(getDriversByWorkingHours.data.multiple);
+    //console.log(getDriversByWorkingHours.error);
+    if(getDriversByWorkingHours.error){
+        allDriverDetails.data.multiple = freeDriverDetails;
+    }else{
+        const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
+        allDriverDetails.data.multiple = workingDrivers;
+    }
+    //const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
+    //allDriverDetails.data.multiple = workingDrivers;  
+    //allDriverDetails.data.multiple = freeDriverDetails;
+    
+    
 
-    allDriverDetails.data.multiple = freeDriverDetails;
     return allDriverDetails;    
 }
 

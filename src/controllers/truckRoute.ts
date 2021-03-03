@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { RHandler } from "../utils/req/requestHandler";
 import { ResponseResult } from "../utils/res/responseBuilder";
-import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder} from '../models/truckRoute';
+import {getTruckRoutes, getTruckId, createTruckTrip,truckRouteByID,getStoreIDByStoreManagerID, createScheduledOrder,routeDetailsByRouteID,Routes} from '../models/truckRoute';
 
 
 const truckRoutes = (): RHandler => {
@@ -52,7 +52,6 @@ const truckRoutes = (): RHandler => {
     const rHandlerData: RHandler = {
       authSchema: {
         hasAccessToken: true,
-        hasRefreshToken: true,
       },
       validateSchema: {
         body: {
@@ -70,7 +69,10 @@ const truckRoutes = (): RHandler => {
         (req: Request, res: Response) => async (
           data: ResponseResult
         ): Promise<ResponseResult> => {
-          return await createTruckTrip(req.body)
+
+          return await createTruckTrip(
+            req.body
+          );
         },
       ],
     };
@@ -119,5 +121,37 @@ const scheduledOrder = (): RHandler => {
     return rHandlerData;
   };
 
+    const getRouteDetailsByRouteID = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        hasAccessToken: true,
 
-export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder}
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await routeDetailsByRouteID(+req.query.truck_route_id);
+        },
+      ],
+    };
+    return rHandlerData;
+  };
+
+    const getRoute = (): RHandler => {
+    const rHandlerData: RHandler = {
+      authSchema: {
+        //hasAccessToken: true,
+        //userType: "customer",
+      },
+      handlers: [
+        (req: Request, res: Response) => async (
+          data: ResponseResult
+        ): Promise<ResponseResult> => {
+          return await Routes();
+        },
+      ],
+    };
+    return rHandlerData;
+  };
+export {truckRoutes, truckId, truckTrip,getTruckRouteByID, scheduledOrder,getRouteDetailsByRouteID,getRoute}

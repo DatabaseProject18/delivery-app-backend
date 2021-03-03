@@ -38,5 +38,14 @@ const truckTripOrderDetails = (truckTrip_id: number): Promise<ResponseResult> =>
 }
 
 
+const allSheduledTruckTrips = (date: string): Promise<ResponseResult> => {
+   
+    return queryBuilder({
+        select: ["truck_schedule_id","driver_id","driver_assistant_id","truck_id","date_time","average_time"],
+        from: "truck_schedule_details",
+        operator: "AND",
+        where:[{columnName:"date_time", comOperator:">=", value:date}]
+    })
+}
 
-export { sheduledTruckTrips , truckTripDetails,truckTripOrderDetails};
+export { sheduledTruckTrips , truckTripDetails,truckTripOrderDetails,allSheduledTruckTrips};

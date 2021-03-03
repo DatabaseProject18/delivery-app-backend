@@ -1,14 +1,14 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
 
-const getDriverAssistantName = async (start_time: Date, end_time: Date): Promise<ResponseResult> => {
+const getDriverAssistantName = async (truck_route_id: number,store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
         operator: "AND",
         where: [{ columnName: "date_time", comOperator: ">=", value: start_time }, { columnName: "date_time", comOperator: "<=", value: end_time }]
     });
-
+    //console.log(getDriverAssistantName);
     const pastConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
@@ -49,12 +49,22 @@ const getDriverAssistantName = async (start_time: Date, end_time: Date): Promise
         select: ["first_name","last_name","driver_assistant_id"],
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
+         operator: "AND",
+        where: [{columnName: "user_type", comOperator: "=",value: "driver_assistant"},{columnName: "store_id", comOperator: "=",value: store_id}]
     });
 
 
     const freeDriverAssistantDetails = allDriverAssistantDetails.data.multiple.filter((elem) => !busyDriverAssistantIds.find(({ driver_assistant_id }) => elem.driver_assistant_id === driver_assistant_id));
-
-    allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
+    const getDriverAssistantsByWorkingHours = await call("get_driver_assistants_who_are_exceeding_total_hours",[truck_route_id,start_time]);
+    //console.log(getDriversByWorkingHours.data.multiple);
+    //console.log(getDriverAssistantsByWorkingHours.error);
+    if(getDriverAssistantsByWorkingHours.error){
+        allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
+    }else{
+        const workingDrivers = freeDriverAssistantDetails.filter((elem) => !getDriverAssistantsByWorkingHours.data.multiple.find(({ driver_assistant_id}) => elem.driver_assistant_id === driver_assistant_id));
+        allDriverAssistantDetails.data.multiple = workingDrivers;
+    }
+    //allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
     return allDriverAssistantDetails;
 }
 

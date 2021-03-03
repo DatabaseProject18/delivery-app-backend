@@ -490,3 +490,135 @@ DELIMITER ;
 			LIMIT offsetNo,numOfItem;
 	 END $$
 	 DELIMITER ;
+
+
+
+
+ 	/*
+	 * update product stock after cancel order
+	 */
+	DROP PROCEDURE IF EXISTS update_product_stock;
+	 DELIMITER $$
+	 CREATE PROCEDURE update_product_stock(
+		 productID INT,
+		 quantity INT
+	 )
+	 BEGIN
+			UPDATE product
+			SET stock = stock + quantity
+			WHERE product_id = productID;
+	 END $$
+	 DELIMITER ;
+
+
+	/*
+	 * get the driver ids who are exceeding total working hours
+	 */
+
+	DROP PROCEDURE IF EXISTS get_drivers_who_are_exceeding_total_hours;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_drivers_who_are_exceeding_total_hours(
+		 route_id INT,
+		 create_date DATE
+	 )
+	 BEGIN
+				SELECT driver_id FROM
+				(SELECT driver_id,total_work_hours,(SUM(average_time)+(SELECT average_time FROM truck_route WHERE truck_route_id = route_id)) AS tot_avg_time
+				FROM truck_schedule ts 
+				JOIN truck_route tr USING(truck_route_id)
+				JOIN driver d USING(driver_id)
+				WHERE MONTH(create_date) = MONTH(ts.date_time)
+				GROUP BY driver_id,total_work_hours
+				HAVING tot_avg_time > total_work_hours) AS new_table;
+	 END $$
+	 DELIMITER ;
+
+
+
+DROP PROCEDURE IF EXISTS insert_new_order;
+	 DELIMITER $$
+	 CREATE PROCEDURE insert_new_order(
+		 order_data JSON
+	 )
+	 BEGIN
+		 DECLARE count INT;
+	     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	     BEGIN
+	         ROLLBACK;
+	         RESIGNAL;
+	     END;
+         SET count = 0;
+	 	START TRANSACTION;
+	 		INSERT INTO order_table(customer_id,order_date,delivery_date,route_id,meet_position) 
+            VALUES (order_data->"$.customerId",order_data->"$.orderDate",order_data->"$.deliveryDate",order_data->"$.routeId",order_data->"$.meetPosition");
+            
+            UPDATE cart 
+			SET is_delete = 1 
+			WHERE customer_id = order_data->"$.customerId"  AND is_delete = 0;
+				
+            WHILE count < order_data->"$.numOfProducts" DO
+				
+                INSERT INTO ordered_product(order_id,product_id,quantity,item_price) 
+                VALUES (LAST_INSERT_ID(),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].productId")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].quantity")),JSON_EXTRACT(order_data,CONCAT("$.product[",count,"].itemPrice")));
+				SET count = count + 1;
+            END WHILE;
+            
+			INSERT INTO payment(order_id,amount,payment_method,payment_date) VALUES (LAST_INSERT_ID(),order_data->"$.cost",order_data->>"$.paymentMethod",order_data->"$.orderDate");
+	     COMMIT;
+	 END $$
+	 DELIMITER ;
+
+	/*
+	 * get the driver assistant ids who are exceeding total working hours
+	 */
+
+	DROP PROCEDURE IF EXISTS get_driver_assistants_who_are_exceeding_total_hours;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_driver_assistants_who_are_exceeding_total_hours(
+		 route_id INT,
+		 create_date DATE
+	 )
+	 BEGIN
+				SELECT driver_assistant_id FROM
+				(SELECT driver_assistant_id,total_work_hours,(SUM(average_time)+(SELECT average_time FROM truck_route WHERE truck_route_id = route_id)) AS tot_avg_time
+				FROM truck_schedule ts 
+				JOIN truck_route tr USING(truck_route_id)
+				JOIN driver_assistant d USING(driver_assistant_id)
+				WHERE MONTH(create_date) = MONTH(ts.date_time)
+				GROUP BY driver_assistant_id,total_work_hours
+				HAVING tot_avg_time > total_work_hours) AS new_table1;
+	 END $$
+	 DELIMITER ;
+
+
+	/*
+	 * add truck trip 
+	 */
+
+
+DROP PROCEDURE IF EXISTS insert_new_truck_trip;
+	 DELIMITER $$
+	 CREATE PROCEDURE insert_new_truck_trip(
+		 trip_data JSON
+	 )
+	 BEGIN
+		 DECLARE count INT;
+	     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	     BEGIN
+	         ROLLBACK;
+	         RESIGNAL;
+	     END;
+         SET count = 0;
+	 	START TRANSACTION;
+	 		INSERT INTO truck_schedule(truck_route_id,truck_id,date_time,store_manager_id,driver_id,driver_assistant_id)
+            VALUES (trip_data->"$.truckRouteId",trip_data->"$.truckId",trip_data->"$.dateTime",trip_data->"$.storeManagerId",trip_data->"$.driverId",trip_data->"$.driverAssistantId");
+            
+            WHILE count < trip_data->"$.numOfOrders" DO
+				   INSERT INTO scheduled_order(order_id,truck_schedule_id) 
+                VALUES (JSON_EXTRACT(trip_data,CONCAT("$.orderIds[",count,"]")),LAST_INSERT_ID());
+				SET count = count + 1;
+            END WHILE;
+	     COMMIT;
+	 END $$
+	 DELIMITER ;
+
