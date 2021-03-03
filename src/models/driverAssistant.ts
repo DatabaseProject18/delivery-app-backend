@@ -8,7 +8,7 @@ const getDriverAssistantName = async (store_id:number,start_time: string, end_ti
         operator: "AND",
         where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }]   
     });
-    console.log(getDriverAssistantName);
+    //console.log(getDriverAssistantName);
     const pastConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",

@@ -1,7 +1,8 @@
-import { queryBuilder } from "../utils/db/database";
+import { queryBuilder, call } from "../utils/db/database";
 import { ResponseResult } from "../utils/res/responseBuilder";
+//import _ from "lodash";
 
-const getDriverName = async (store_id:number,start_time: string, end_time: string): Promise<ResponseResult> => {
+const getDriverName = async (truck_route_id: number, store_id: number,start_time: string, end_time: string): Promise<ResponseResult> => {
     const presentConsecutiveDrivers = await queryBuilder({
         select: ["driver_id"],
         from: "truck_schedule",
@@ -50,8 +51,13 @@ const getDriverName = async (store_id:number,start_time: string, end_time: strin
     }); 
 
     const freeDriverDetails = allDriverDetails.data.multiple.filter((elem) => !busyDriverIds.find(({ driver_id }) => elem.driver_id === driver_id));
+    const getDriversByWorkingHours = await call("get_drivers_who_are_exceeding_total_hours",[truck_route_id,start_time]);
+    const workingDrivers = freeDriverDetails.filter((elem) => !getDriversByWorkingHours.data.multiple.find(({ driver_id}) => elem.driver_id === driver_id));
+    allDriverDetails.data.multiple = workingDrivers;  
+    //allDriverDetails.data.multiple = freeDriverDetails;
+    
+    
 
-    allDriverDetails.data.multiple = freeDriverDetails;
     return allDriverDetails;    
 }
 

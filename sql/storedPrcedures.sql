@@ -485,3 +485,26 @@ DELIMITER ;
 	 END $$
 	 DELIMITER ;
 
+
+	/*
+	 * get the driver ids who are exceeding total working hours
+	 */
+
+	DROP PROCEDURE IF EXISTS get_drivers_who_are_exceeding_total_hours;
+	 DELIMITER $$
+	 CREATE PROCEDURE get_drivers_who_are_exceeding_total_hours(
+		 route_id INT,
+		 create_date DATE
+	 )
+	 BEGIN
+				SELECT driver_id FROM
+				(SELECT driver_id,total_work_hours,(SUM(average_time)+(SELECT average_time FROM truck_route WHERE truck_route_id = route_id)) AS tot_avg_time
+				FROM truck_schedule ts 
+				JOIN truck_route tr USING(truck_route_id)
+				JOIN driver d USING(driver_id)
+				WHERE MONTH(create_date) = MONTH(ts.date_time)
+				GROUP BY driver_id,total_work_hours
+				HAVING tot_avg_time > total_work_hours) AS new_table;
+	 END $$
+	 DELIMITER ;
+
