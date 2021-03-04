@@ -6,31 +6,31 @@ const getDriverAssistantName = async (truck_route_id: number,store_id:number,sta
         select: ["driver_assistant_id"],
         from: "truck_schedule",
         operator: "AND",
-        where: [{ columnName: "date_time", comOperator: ">", value: start_time }, { columnName: "date_time", comOperator: "<", value: end_time }]   
+        where: [{ columnName: "date_time", comOperator: ">=", value: start_time }, { columnName: "date_time", comOperator: "<=", value: end_time }]
     });
     //console.log(getDriverAssistantName);
     const pastConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: "<=", value: start_time }],
-        order: {["date_time"]: "DESC"},
-        limit: [1] 
+        where: [{ columnName: "date_time", comOperator: "<", value: start_time }],
+        order: {date_time: "DESC"},
+        limit: [1]
     });
 
     const futureConsecutiveDriverAssistants = await queryBuilder({
         select: ["driver_assistant_id"],
         from: "truck_schedule",
-        where: [{ columnName: "date_time", comOperator: ">=", value: end_time }],
-        order: {["date_time"]: "ASC"},
-        limit: [1] 
+        where: [{ columnName: "date_time", comOperator: ">", value: end_time }],
+        order: {date_time: "ASC"},
+        limit: [1]
     });
-    
+
     let busyDriverAssistantIds = [];
-    
+
     if(presentConsecutiveDriverAssistants.data){
         presentConsecutiveDriverAssistants.data.multiple.forEach(function (value) {
             busyDriverAssistantIds.push(value);
-          });    
+          });
     }
 
     if(pastConsecutiveDriverAssistants.data){
@@ -50,8 +50,8 @@ const getDriverAssistantName = async (truck_route_id: number,store_id:number,sta
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
          operator: "AND",
-        where: [{columnName: "user_type", comOperator: "=",value: "driver_assistant"},{columnName: "store_id", comOperator: "=",value: store_id}] 
-    }); 
+        where: [{columnName: "user_type", comOperator: "=",value: "driver_assistant"},{columnName: "store_id", comOperator: "=",value: store_id}]
+    });
 
 
     const freeDriverAssistantDetails = allDriverAssistantDetails.data.multiple.filter((elem) => !busyDriverAssistantIds.find(({ driver_assistant_id }) => elem.driver_assistant_id === driver_assistant_id));
@@ -65,14 +65,14 @@ const getDriverAssistantName = async (truck_route_id: number,store_id:number,sta
         allDriverAssistantDetails.data.multiple = workingDrivers;
     }
     //allDriverAssistantDetails.data.multiple = freeDriverAssistantDetails;
-    return allDriverAssistantDetails;    
+    return allDriverAssistantDetails;
 }
 
 const getStoreIDByStoreManagerID = (store_manager_id: number): Promise<ResponseResult> => {
     return queryBuilder({
         select: ["store_id"],
         from: "store_manager",
-        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}] 
+        where: [{columnName: "store_manager_id", comOperator: "=", value: store_manager_id}]
     });
 }
 
@@ -92,7 +92,7 @@ const getDriverAssistantFullDetails = (driver_assistant_id: number): Promise<Res
         from: "user_data",
         join: { "staff": "user_id", "driver_assistant": "staff_id" },
         operator: "AND",
-        where: [{columnName: "driver_assistant_id", comOperator: "=",value: driver_assistant_id}, {columnName: "user_type", comOperator: "=",value: "driver_assistant"}] 
+        where: [{columnName: "driver_assistant_id", comOperator: "=",value: driver_assistant_id}, {columnName: "user_type", comOperator: "=",value: "driver_assistant"}]
     });
 }
 

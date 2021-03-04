@@ -34,7 +34,7 @@ const errors: { [name: string]: ErrorDetail } = {
   },
   ER_NO_REFERENCED_ROW_2: {
     resCode: 400,
-    msg: "Data are not allowed!",
+    msg: "Data is not allowed!",
   },
   ER_NONEXISTING_GRANT: {
     resCode: 403,
