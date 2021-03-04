@@ -495,7 +495,7 @@ DELIMITER ;
         order_id DECIMAL
     )
     BEGIN
-    SELECT t.train_name, train_id
+    SELECT t.train_name, train_id, train_capacity
     FROM order_table ot, truck_route tr, train t
     WHERE ot.order_id = order_id AND
             ot.route_id = tr.truck_route_id AND
